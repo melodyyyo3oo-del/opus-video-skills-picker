@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="帮你挑选用 Claude Opus 5.5 做视频的开源 skill、风格库和提示词：8 个仓库的效果图、样片和对比。">
+<meta property="og:title" content="Opus 5.5 视频挑选台">
+<meta property="og:description" content="8 个 Opus 5.5 做视频的开源仓库：59+15 种风格的效果图和样片、100 个案例预览、提示词和技术路线。">
+<link rel="icon" href="deco/daisy.svg" type="image/svg+xml">
+<title>Opus 5.5 视频挑选台</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@500;600;700&family=ZCOOL+KuaiLe&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+html{-webkit-text-size-adjust:100%}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+.lemo-play{cursor:pointer}.lemo-play video{width:100%;height:100%;object-fit:contain;background:#000}
+/* Layout: Daisy Days — cream page, each repo a pastel band like a slide, ink 3px outlines with chunky offset shadows, hand-drawn daisies and stars in the corners. Single light look by design. */
+:root{
+  --cream:#F5F0E6; --turquoise:#7ECDC0; --soft-pink:#F7C8D4; --butter:#FDE68A; --mint:#A8E6CF;
+  --lavender:#D4A5E8; --peach:#FFCBA4; --sky:#A8D8F0; --coral:#F8635F; --white:#FFFFFF;
+  --ink:#2D2D2D; --muted:#6B6B6B; --line:#2D2D2D; --surface:#FFFFFF; --sunk:#FBF7EF; --accent:#D8433F; --mark:#FDE68A; --mark-ink:#2D2D2D;
+  --bw:3px; --radius:20px; --radius-lg:28px; --shadow:6px 6px 0 var(--ink); --shadow-sm:4px 4px 0 var(--ink);
+  --display:"Fredoka One","ZCOOL KuaiLe","Noto Sans SC",system-ui,sans-serif;
+  --body:"Quicksand","Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"Quicksand","Noto Sans SC",ui-rounded,system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--cream);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.65;font-weight:500}
+a{color:var(--accent);font-weight:700;text-underline-offset:3px;text-decoration-thickness:2px}
+a:focus-visible,button:focus-visible,video:focus-visible{outline:3px solid var(--ink);outline-offset:3px;border-radius:8px}
+h1,h2,h3{font-family:var(--display);font-weight:400;letter-spacing:.02em;text-wrap:balance;line-height:1.2;margin:0}
+p{margin:0}
+.mono{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.04em;color:var(--muted)}
+.inner{max-width:1240px;margin:0 auto;position:relative;z-index:2;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* decorations */
+.deco{position:absolute;pointer-events:none;z-index:1;display:block}
+@media (max-width:720px){.deco.hide-sm{display:none}}
+@media (prefers-reduced-motion: no-preference){.deco.spin{animation:spin 40s linear infinite}.deco.bob{animation:bob 6s ease-in-out infinite}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bob{50%{transform:translateY(-8px) rotate(6deg)}}
+
+/* masthead */
+header.top{position:relative;overflow:hidden;padding-block:64px 56px;text-align:center}
+header.top .inner{display:grid;gap:18px;justify-items:center}
+header.top h1{font-size:clamp(34px,6vw,64px);line-height:1.25}
+header.top h1 .hl{background:var(--butter);border:var(--bw) solid var(--ink);border-radius:18px;padding:0 .25em;box-shadow:var(--shadow-sm);display:inline-block;transform:rotate(-2deg)}
+header.top .lede{max-width:40ch;color:var(--muted);font-size:17px;font-weight:600}
+.badge{display:inline-block;padding:6px 18px;border-radius:50px;border:var(--bw) solid var(--ink);font-family:var(--display);font-size:14px;background:var(--mint)}
+.facts{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
+.facts div{display:grid;gap:2px;background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:12px 20px;min-width:150px}
+.facts div:nth-child(1){background:var(--soft-pink)}.facts div:nth-child(2){background:var(--sky)}.facts div:nth-child(3){background:var(--butter)}.facts div:nth-child(4){background:var(--lavender)}
+.facts b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
+.facts span{font-size:13px;font-weight:700}
+
+/* sticky pill nav */
+nav.reels{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--cream);border-block:var(--bw) solid var(--ink);overflow-x:auto;white-space:nowrap}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--cream)}
+nav.reels .in{max-width:1240px;margin:0 auto;display:flex;gap:8px;padding-block:10px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+nav.reels a{font-family:var(--display);font-weight:400;font-size:14px;text-decoration:none;color:var(--ink);padding:4px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--white)}
+nav.reels a:nth-child(7n+1){background:var(--mint)}nav.reels a:nth-child(7n+2){background:var(--butter)}nav.reels a:nth-child(7n+3){background:var(--soft-pink)}nav.reels a:nth-child(7n+4){background:var(--sky)}nav.reels a:nth-child(7n+5){background:var(--lavender)}nav.reels a:nth-child(7n+6){background:var(--peach)}
+nav.reels a:hover{transform:translateY(-2px);box-shadow:3px 3px 0 var(--ink)}
+
+/* bands */
+.band{position:relative;overflow:hidden;padding-block:56px 64px;border-bottom:var(--bw) solid var(--ink)}
+#overview{background:var(--cream)}
+#pick{background:var(--butter)}
+section > .inner > h2, .band-title{font-size:clamp(26px,3.6vw,40px);margin-bottom:8px}
+.band-title.on-color{color:var(--white);text-shadow:3px 3px 0 var(--ink);-webkit-text-stroke:1px var(--ink)}
+.sub{color:var(--ink);opacity:.8;max-width:72ch;margin-bottom:22px;font-weight:600}
+
+/* tables as cards */
+.tbl{overflow-x:auto;border:var(--bw) solid var(--ink);border-radius:var(--radius);background:var(--white);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:860px;font-size:14px}
+th,td{text-align:left;vertical-align:top;padding:11px 14px;border-bottom:2px dashed #d9d2c3}
+th{font-family:var(--display);font-weight:400;font-size:14px;background:var(--mint);border-bottom:var(--bw) solid var(--ink)}
+tr:last-child td{border-bottom:0}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:700}
+.kind{display:inline-block;font-family:var(--display);font-size:12.5px;padding:2px 10px;border-radius:999px;border:2px solid var(--ink);white-space:nowrap;color:var(--ink)}
+.k-skill{background:var(--mint)} .k-style{background:var(--sky)} .k-kit{background:var(--peach)} .k-src{background:var(--lavender)} .k-list{background:var(--butter)}
+
+/* picker */
+.pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.pick > div{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:grid;align-content:start}
+.pick .q{font-family:var(--display);font-weight:400;font-size:16.5px;padding:12px 18px;border-bottom:var(--bw) solid var(--ink);background:var(--soft-pink)}
+.pick > div:nth-child(6n+2) .q{background:var(--mint)}.pick > div:nth-child(6n+3) .q{background:var(--sky)}.pick > div:nth-child(6n+4) .q{background:var(--lavender)}.pick > div:nth-child(6n+5) .q{background:var(--peach)}.pick > div:nth-child(6n) .q{background:var(--turquoise)}
+.pick .a{padding:12px 18px 16px;font-size:14.5px;color:var(--ink)}
+
+/* reels = pastel bands */
+.reel{position:relative;overflow:hidden;padding-block:56px 64px;border-bottom:var(--bw) solid var(--ink);background:var(--band,var(--cream))}
+#lemo{--band:var(--mint);--head:var(--butter)}
+#mg{--band:var(--turquoise);--head:var(--soft-pink)}
+#cab{--band:var(--soft-pink);--head:var(--sky)}
+#pdoom{--band:var(--lavender);--head:var(--butter)}
+#yihui{--band:var(--sky);--head:var(--peach)}
+#joe{--band:var(--butter);--head:var(--mint)}
+#ath{--band:var(--peach);--head:var(--lavender)}
+.panel{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;margin-bottom:26px}
+.slate{display:grid;grid-template-columns:1fr auto;gap:8px 20px;align-items:center;padding:16px 26px;background:var(--head);border-bottom:var(--bw) solid var(--ink)}
+.slate .eyebrow{color:var(--ink);opacity:.75}
+.slate h2{font-size:clamp(24px,3.4vw,36px)}
+.slate h2 a{color:var(--ink);text-decoration:none}
+.slate h2 a:hover{color:var(--accent)}
+.slate .meta{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.slate .meta span{background:var(--white);border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:13px;font-weight:700;white-space:nowrap}
+@media (max-width:640px){.slate{grid-template-columns:1fr;padding:14px 18px}.slate .meta{justify-content:flex-start}}
+.verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px 30px;padding:22px 26px 24px}
+@media (max-width:640px){.verdict{padding:18px}}
+.verdict h3{display:inline-block;font-size:15px;padding:2px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--butter);margin-bottom:8px}
+.verdict > div:nth-child(2) h3{background:var(--mint)}.verdict > div:nth-child(3) h3{background:var(--soft-pink)}.verdict > div:nth-child(4) h3{background:var(--sky)}
+.verdict ul{margin:0;padding:0;list-style:none;display:grid;gap:6px}
+.verdict li{position:relative;padding-left:24px}
+.verdict li::before{content:"";position:absolute;left:0;top:6px;width:14px;height:14px;background:var(--butter);border:2px solid var(--ink);border-radius:50%}
+.verdict p,.verdict li{font-size:14.5px}
+.howto{background:var(--sunk);border:2px dashed var(--ink);border-radius:14px;padding:12px 16px;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:12.5px;overflow-x:auto;white-space:pre;line-height:1.6}
+
+/* filter chips */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-block:4px 20px}
+.chips button{font-family:var(--display);font-size:14px;padding:5px 14px;border-radius:999px;border:2px solid var(--ink);background:var(--white);color:var(--ink);cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.chips button[aria-pressed="true"]{background:var(--coral);color:var(--white);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-1px)}
+.chips button .n{font-family:var(--body);font-weight:700;font-size:11.5px;opacity:.8;margin-left:5px}
+
+/* frame cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:22px}
+.grid.sm{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px}
+.card{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden;display:grid;grid-template-rows:auto 1fr;min-width:0;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow)}
+.card .media{position:relative;aspect-ratio:16/9;background:var(--sunk);overflow:hidden;border-bottom:var(--bw) solid var(--ink)}
+.card .media img,.card .media video{width:100%;height:100%;object-fit:cover;display:block}
+.card .media .tc,.card .media .tl,.play-hint{position:absolute;font-size:11.5px;font-weight:700;border:2px solid var(--ink);border-radius:999px;padding:0 8px;background:var(--white);color:var(--ink)}
+.card .media .tc{right:7px;bottom:7px}
+.card .media .tl{left:7px;top:7px;background:var(--butter)}
+.play-hint{left:7px;bottom:7px;background:var(--soft-pink)}
+.card .body{padding:12px 14px 14px;display:grid;gap:6px;align-content:start;min-width:0}
+.card .name{font-family:var(--display);font-weight:400;font-size:17px;line-height:1.3}
+.card .en{font-size:12px;color:var(--muted);font-weight:600}
+.card .desc{font-size:13.5px;color:var(--ink);opacity:.82}
+.card .tags{display:flex;flex-wrap:wrap;gap:5px}
+.card .tags span{font-size:11.5px;font-weight:700;padding:0 8px;border-radius:999px;border:1.5px solid var(--ink);background:var(--cream)}
+.card .tags span:first-child{background:var(--mint)}
+.card .links{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;margin-top:2px}
+.vert .media video{object-fit:contain;background:#000}
+
+/* feature */
+.feature{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;align-items:center;background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;margin-bottom:26px}
+.feature img{width:100%;display:block;border-right:var(--bw) solid var(--ink)}
+.feature .txt{padding:18px 22px 20px 0;display:grid;gap:8px}
+@media (max-width:760px){.feature{grid-template-columns:1fr}.feature img{border-right:0;border-bottom:var(--bw) solid var(--ink)}.feature .txt{padding:0 18px 18px}}
+
+.duo{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+@media (max-width:400px){.duo{grid-template-columns:1fr}}
+.duo > div{background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;display:grid;align-content:start;min-width:0}
+.duo > div > img{border-bottom:var(--bw) solid var(--ink)}
+.duo .pad{padding:16px 18px 18px;display:grid;gap:8px}
+.duo h3{font-size:21px}
+.strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px;background:var(--ink);padding:4px;border-bottom:var(--bw) solid var(--ink)}
+.strip img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-radius:6px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--ink);padding:4px;border-bottom:var(--bw) solid var(--ink)}
+.pair img,.pair video{width:100%;display:block;border-radius:6px}
+.reel h3.sec{font-size:22px;margin:30px 0 14px}
+
+footer{position:relative;overflow:hidden;padding-block:48px 64px;color:var(--ink);font-size:13.5px;font-weight:600;background:var(--cream)}
+footer .inner{max-width:760px;text-align:center}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <img class="deco spin" src="deco/daisy.svg" alt="" style="top:-40px;left:-40px;width:170px">
+  <img class="deco hide-sm" src="deco/sun.svg" alt="" style="top:24px;right:6%;width:100px">
+  <div class="inner">
+    <h1>Opus 5.5 <span class="hl">视频挑选台</span></h1>
+    <p class="lede">8 个仓库的效果图、样片和对比，帮你挑一个来做视频。</p>
+  </div>
+</header>
+<nav class="reels" aria-label="仓库导航"><div class="in" id="navlinks"></div></nav>
+
+<section id="overview" class="band">
+  <img class="deco hide-sm" src="deco/cloud.svg" alt="" style="top:18px;right:3%;width:120px">
+  <div class="inner">
+    <h2>总览</h2>
+    <p class="sub">8 个仓库里，真正能安装成 Claude Code skill 的只有 lemo-opuscar。其余几个是可以直接喂给 Claude 的风格提示词、起步代码，或者案例合集。所有片子都是 Opus 5.5 写代码逐帧渲染的，没有用视频生成模型。数据取自 GitHub，2026-10-25。</p>
+    <div class="facts" id="facts"></div>
+    <div class="tbl"><table>
+      <thead><tr><th>仓库</th><th>类型</th><th>⭐</th><th>里面有什么</th><th>怎么用</th><th>适合</th></tr></thead>
+      <tbody id="ovrows"></tbody>
+    </table></div>
+  </div>
+</section>
+
+<section id="pick" class="band">
+  <img class="deco hide-sm" src="deco/rainbow.svg" alt="" style="top:22px;right:4%;width:150px">
+  <img class="deco" src="deco/daisy.svg" alt="" style="bottom:-50px;left:-40px;width:170px">
+  <div class="inner">
+    <h2>怎么挑</h2>
+    <p class="sub">先想清楚要做什么片子，再对应到仓库。</p>
+    <div class="pick" id="picklist"></div>
+  </div>
+</section>
+
+<div id="reels"></div>
+
+<footer>
+  <img class="deco hide-sm" src="deco/rainbow.svg" alt="" style="bottom:12px;left:4%;width:140px">
+  <img class="deco" src="deco/daisy.svg" alt="" style="top:-40px;right:-40px;width:150px">
+  <div class="inner">
+  star 数和最近更新时间取自 GitHub API（2026-10-25）。效果图和样片版权归各仓库作者，这里只做挑选参考，点卡片上的链接可以到原仓库看完整内容。所有效果图和样片都直接从原仓库或原网站加载，本仓库不存放任何一张。来源和许可见 <a href="https://github.com/melodyyyo3oo-del/opus-video-skills-picker/blob/main/CREDITS.md">CREDITS.md</a>。
+  </div>
+</footer>
+
+<script>
+const D = {"facts": [["1", "个能直接安装的 skill"], ["74", "种带示范片的现成风格"], ["721", "条可复制的提示词"], ["≈$2–$200", "一支片子的花费区间"]], "repos": [{"id": "lemo", "short": "lemo-opuscar", "owner": "lemomo-ai", "name": "lemo-opuscar", "kind": "可安装 skill", "stars": "7,072", "license": "MIT", "updated": "2026-10-24", "url": "https://github.com/lemomo-ai/lemo-opuscar", "what": "59 种影片风格，每种带风格提示词和一支示范片；导演、技术两份指南", "use": "claude plugin 安装，然后说「用某某风格做一支 xx 秒的片子」", "fit": "想直接出完整成片（画面、配乐、旁白都有）", "about": "一个 Claude Code 插件。Agent 按 DIRECTOR.md（导演）、TECHNIQUE.md（技术）和所选风格的 STYLE.md 工作，像一个小工作室：分镜、逐帧渲染、配乐、TTS 旁白、混音都包了。还能把库里的风格改成你自己的，或者从零做一个新风格。", "pros": ["8 个仓库里唯一真正装上就能用的 skill，覆盖范围最广", "风格跨度很大：纪实新闻、卫星图、显微镜、水墨、皮影、浮世绘、像素游戏、3D 材质等", "每个风格都有一支完整示范片和可复用的风格提示词", "支持先看分镜再出片；还能保存「我的风格」反复用"], "cons": ["作者说明是针对 Opus 5.5 调的，换别的模型效果可能不行", "一支片子大约 30–60 分钟，token 消耗不小", "需要 Node 20+、ffmpeg、Python 3.11+", "示范片是 CC BY 4.0，转载要署名 LemoLab；有 3 条配音不在授权范围内"], "howto": "claude plugin marketplace add lemomo-ai/lemo-opuscar\nclaude plugin install lemo-opuscar@lemolab\n# 然后：用「水彩」风格做一支 45 秒的片子，讲……"}, {"id": "mg", "short": "mg-styles-15", "owner": "Vincentwei1021", "name": "mg-styles-15", "kind": "风格库", "stars": "2,095", "license": "MIT", "updated": "2026-10-05", "url": "https://github.com/Vincentwei1021/mg-styles-15", "what": "15 种 MG 动态设计风格，各一支 10 秒成片，附完整提示词和源码", "use": "把 prompts/ 里的提示词整段贴给 Claude Code，改 Creative seed", "fit": "片头、产品短片、品牌 ident、短视频包装", "about": "15 支 10 秒的动态设计短片，每支都由 Opus 5.5 从一条提示词写代码做出来，画面和配乐都是代码生成。每条提示词结构一样：输出规格、建议技术路线、创意种子、风格标志特征。还附了 AI 评审用的 rubric.md 和写新风格用的 template.md。", "pros": ["风格都是 MG 行业的主流范式，偏商业可用：扁平矢量、等轴 2.5D、玻璃拟态、综艺花字、回形针式科普等", "提示词写得很工整，可以直接当 skill 的骨架改", "每支片做过两轮「AI 评审 → 修改」，评审分 7.57–8.21", "共用渲染器 harness/render.mjs 和配乐工具 lib/audio 可以拿来复用"], "cons": ["不是 skill，要自己贴提示词", "同一条提示词每次结果不同，原片经过多轮迭代，一次跑出来通常达不到同样完成度", "字体文件不在仓库里，要自己装", "只有 10 秒，长片需要自己扩展结构"], "howto": "# 新建空文件夹，打开 Claude Code，粘贴 prompts/05-cel-boil.md 里「提示词」那一整段\n# 想换内容：只改 Creative seed；保留 Signature features"}, {"id": "cab", "short": "AnimationBase", "owner": "JohnHeibel", "name": "ClaudeAnimationBase", "kind": "起步模板", "stars": "1,790", "license": "MIT", "updated": "2026-09-24", "url": "https://github.com/JohnHeibel/ClaudeAnimationBase", "what": "p5.js + p5.brush 手绘角色动画起步包：Clawd 角色、31 种情绪、动画指南", "use": "clone 后让 Claude 先读 ANIMATION_GUIDE.md，再说要什么片子", "fit": "手绘水彩风的角色小动画、表情包式短片", "about": "从 P(doom) MV 的代码里提炼出来的「更稳、更通用」的底座。ANIMATION_GUIDE.md 写死了规则：手作感、一镜成片、不出现文字、每个场景都要有事发生、转场不断、笔触 + 平涂 + 线条抖动。Opus 会先出分镜，再一个镜头一个镜头搭，渲染接触印样自查，最后输出 out/video.mp4。", "pros": ["角色资产现成：视角、表情、嘴型、帽子、舞蹈都写好了", "作者实测：推理强度越高，画面越华丽、细节越多（测试片都用 xhigh）", "指南本质上就是一份 skill，可以直接改成你自己的角色"], "cons": ["没有独立 GPU 时水彩填充很慢（每帧要几秒），可以让模型换掉水彩", "风格单一，就是这一种手绘水彩", "默认无文字，做讲解片要自己放开"], "howto": "git clone https://github.com/JohnHeibel/ClaudeAnimationBase && cd ClaudeAnimationBase && claude\n> Read ANIMATION_GUIDE.md, then make a 15-second video of Clawd trying to catch a butterfly."}, {"id": "pdoom", "short": "P(doom) ×2", "owner": "JohnHeibel · mexicat", "name": "P(doom) MV 两版源码", "kind": "源码参考", "stars": "2,574 / 3,433", "license": "未声明", "updated": "2026-09-25", "url": "https://github.com/JohnHeibel/PDoomVideo", "what": "同一首歌《I'm Upping My P(doom)》的两版 MV 完整源码", "use": "当参考读：分镜、动画指南、渲染脚本", "fit": "做歌词 MV、想学长片的工程组织", "about": "两个仓库是同一首歌的两种做法。JohnHeibel 版是最早火起来的那支（Clawd 手绘水彩），mexicat 版是 three.js 电影感 + 卡拉 OK 字幕。都不是 skill，价值在于完整公开了一支 2–3 分钟长片从分镜到渲染的全部代码。", "pros": ["长片（约 156 秒）怎么拆章节、怎么让子代理并行，两份都有现成答案", "JohnHeibel 版的 ANIMATION_GUIDE.md 被很多后来者引用为「确定性渲染」写法的范本", "mexicat 版的渲染管线（运动模糊、4K、双进程渲染）是目前公开的最工程化的一套"], "cons": ["是作品源码，不是工具，换题材要自己改", "歌曲和歌词版权不在 MIT 范围内", "mexicat 版 4K 全曲在 M5 Pro 上约 57 分钟、内存峰值约 23 GB"], "howto": "# JohnHeibel 版\nnpm install && node render.mjs --frames=0:156.6 --workers=4 && node render.mjs --encode --out=out/pdoom.mp4\n# mexicat 版\ncd app && bun install && bunx vite   # 预览 http://localhost:5173", "starsJohn": "2,574", "starsMex": "3,433"}, {"id": "yihui", "short": "awesome-opus5-5-videos", "owner": "yihui-dev", "name": "awesome-opus5-5-videos", "kind": "案例合集", "stars": "10,824", "license": "MIT", "updated": "2026-10-13", "url": "https://github.com/yihui-dev/awesome-opus5-5-videos", "what": "703 条 X 上的 Opus 5.5 视频提示词，100 条精选带动态预览", "use": "挑一个喜欢的，打开 prompt 文件复制给 Claude", "fit": "找灵感、找能直接抄的一句话提示词", "about": "收集 X 上爆火的 Opus 5.5 视频和背后的提示词，每条都链到原帖。配套网站 Skillry 把原片和「用同一提示词重做的版本」并排放，可以看出提示词的可复现程度。下面是 README 里精选的 100 条。", "pros": ["量最大：703 条提示词，418 条有复刻对比", "每条都标了技术栈（Canvas、SVG、GSAP、Three.js、GLSL 等），方便按技术挑", "data/videos.json 是结构化数据，可以自己筛"], "cons": ["是案例合集，不是 skill", "有些作者只公开了部分提示词，文件里会注明", "英文为主"], "howto": "# 打开 prompts/<作者-编号>.md，复制 Prompt 段落，粘给 Opus 5.5\n# 让它输出单个 HTML 文件，需要视频再录屏或逐帧渲染"}, {"id": "joe", "short": "opus-video-prompts", "owner": "joeseesun", "name": "opus-video-prompts", "kind": "提示词合集", "stars": "746", "license": "未声明", "updated": "2026-09-27", "url": "https://github.com/joeseesun/opus-video-prompts", "what": "18 份完整提示词、54 个案例（附成本）、9 种技术路线、写法经验，全中文", "use": "按「提示词速查」表挑一条粘进 Claude Code", "fit": "中文用户入门；想知道一支片子大概花多少钱、多少时间", "about": "中文整理得最好的一份。只收作者本人公开的提示词原文，覆盖发布后第一周 X、B 站、Linux.do 等处的案例。最有用的是案例表里的「耗时成本」一栏和「写法经验」一节。", "pros": ["全中文，有中华五千年线稿、大气环流 TTS 科普、口播改线稿等中文案例", "给了成本参照：一句话短片约 2 美元；几分钟 MV 单次会话可能到 200 美元，或占 Max 周额度 7%–10%", "写法经验很实用：先分镜后代码、列禁用清单、每帧只由时间 t 决定、让它自己看片返工"], "cons": ["不是 skill，提示词要自己贴", "只覆盖发布后第一周，更新频率不高", "没有预览图，需要点原帖看效果"], "howto": "1. Claude Code 切到 Opus 5.5，effort 调到 high / xhigh\n2. 本机装好 Node.js、Chrome、FFmpeg\n3. 新建空目录，粘一条提示词，等它写代码、渲染、自检"}, {"id": "ath", "short": "awesome-claude-5-5-videos", "owner": "athemeroy", "name": "awesome-claude-5-5-videos", "kind": "研究合集", "stars": "763", "license": "CC-BY-4.0", "updated": "2026-10-11", "url": "https://github.com/athemeroy/awesome-claude-5-5-videos", "what": "424 条来源帖子（Opus 301、Sonnet 54、Haiku 21、Fable 68），附风格、配色、工作流的统计研究", "use": "当调研资料读；按任务类型找起点案例", "fit": "想了解「什么题材适合什么风格」，或比较不同模型做视频", "about": "偏研究的合集：不只列案例，还对 1,119 个文件做了题材 × 风格、配色的统计，并拆了几个完整工作流的投入和成本。它还整理了一份「可复用开源项目」清单，里面有几个本页没收的 skill。", "pros": ["结论可以直接用：游戏/交互类 70% 是 3D 渲染，广告/发布类 71.6% 是动态图形 UI", "动态图形类深色、浅色大约各占一半，配色不必默认走暗色", "覆盖 Sonnet、Haiku，可以看便宜模型能做到什么程度"], "cons": ["不提供提示词合集，要点进原帖", "研究性质，信息密度高但上手慢", "预览只抽了 9 帧，不能代表完整动态"], "howto": "# 按任务挑起点：docs/prompt-playbook.zh-CN.md 有 7 个中文提示词模板\n# 题材 × 风格对照：docs/domain-style-atlas.md"}], "pick": [["想装一个东西，说一句话就出完整成片", "装 <b>lemo-opuscar<\/b>，在 59 种风格里挑一个。最省事，但每支片子要 30–60 分钟。"], ["要 10 秒左右的片头、产品短片或品牌动效", "用 <b>mg-styles-15<\/b> 的提示词，改 Creative seed。评审分最高的是 80s Synthwave（8.21）和拼贴（8.14）。"], ["要手绘可爱的角色动画", "<b>ClaudeAnimationBase<\/b>，现成的 Clawd 角色和 31 种情绪；也可以让它换成你自己的角色。"], ["要做歌词 MV 或两三分钟的长片", "读 <b>P(doom) 两版源码<\/b>，学怎么拆章节、派子代理、做确定性渲染。"], ["做中文科普或讲解片", "先看 <b>opus-video-prompts<\/b> 里的中文案例（线稿 + TTS + 双语字幕），再配 lemo 的「白板讲解」或 mg 的「回形针式科普」风格。"], ["还没想好，先找灵感", "刷 <b>awesome-opus5-5-videos<\/b> 的 100 个动态预览；想知道什么题材配什么风格，看 <b>athemeroy<\/b> 的统计。"]], "lemo": [{"slug": "caption-news", "cn": "字幕新闻", "en": "Caption News", "cat": "剪辑与纪实", "film": "The Bee Ledger", "line": "美国一年死掉 130 万箱蜜蜂，总数却涨了 6%：静音也能看懂的新闻。", "dur": 60, "uses": ["Social news", "Report explainers", "Data shorts"]}, {"slug": "newsreel", "cn": "1920s 新闻影片", "en": "1920s Newsreel", "cat": "剪辑与纪实", "film": "Knock-Knee Alert", "line": "1926 年报纸说查尔斯顿会跳坏膝盖，福特工人野餐会上的孩子照跳不误。", "dur": 55, "uses": ["History stories", "Fads & eras", "Anniversaries"]}, {"slug": "countdown", "cn": "实时倒计时分屏", "en": "Live Countdown Split-screen", "cat": "剪辑与纪实", "film": "Counting Itself Down", "line": "阿尔忒弥斯二号发射的最后一分钟，一秒不剪：格子从 1 开到 9，点火合成 1。", "dur": 60, "uses": ["Launches", "Countdowns", "Live events"]}, {"slug": "city-symphony", "cn": "延时交响", "en": "Time-lapse Symphony", "cat": "剪辑与纪实", "film": "One Day in New York", "line": "纽约的一天：延时光河、踩着十六分音符的网格，1899 年和今天并排。", "dur": 52, "uses": ["City films", "Music montages", "Openers"]}, {"slug": "visual-investigation", "cn": "视觉调查", "en": "Visual Investigation", "cat": "剪辑与纪实", "film": "The Hindenburg: Four Minutes, 32 Seconds", "line": "新闻片、照片、证词和调查报告排上同一条时间轴，五路来源指向一处。", "dur": 60, "uses": ["Reconstructions", "Fact-checks", "Incident reports"]}, {"slug": "kino-montage", "cn": "构成主义蒙太奇", "en": "Constructivist Montage", "cat": "剪辑与纪实", "film": "410 Days", "line": "帝国大厦的小册子写着建造者，工地实拍和老照片给出答案：每天 2,500 人。", "dur": 60, "uses": ["Industry histories", "Milestones", "Collective effort"]}, {"slug": "telestrator", "cn": "体育战术板", "en": "Sports Telestrator", "cat": "剪辑与纪实", "film": "Freeze Frame", "line": "半场 0–3，费内巴切 12 分钟连进三球：冻住画面、画线、分屏、射门图。", "dur": 54, "uses": ["Sports analysis", "Match recaps", "Coaching"]}, {"slug": "news-package", "cn": "电视新闻包装", "en": "Broadcast News Package", "cat": "剪辑与纪实", "film": "The Week in AI", "line": "一周四条 AI 新闻，一整套电视台包装：串联单、标题条、翻牌价格表、规格卡。", "dur": 54, "uses": ["News round-ups", "Bulletins", "Market updates"]}, {"slug": "satellite-briefing", "cn": "卫星简报", "en": "Satellite Briefing", "cat": "实证影像", "film": "The Map Still Says Sea", "line": "卫星照着地图去找咸海，找到的是沙漠；只有筑了坝的那一块回来了。", "dur": 38, "uses": ["Climate", "News explainers", "Geography"]}, {"slug": "briefing-board", "cn": "工程简报板", "en": "Engineering Briefing Board", "cat": "实证影像", "film": "The Ship Decides", "line": "一条河要架桥，四种桥型在一面简报墙上逐个受检，拍板的是桥下要过的船。", "dur": 40, "uses": ["Engineering", "Option comparisons", "Briefings"]}, {"slug": "lidar-survey", "cn": "点云测绘", "en": "LiDAR Survey", "cat": "实证影像", "film": "The Fields Under the Forest", "line": "激光点云剥掉一片森林的树冠，露出当年农田的石墙：3.4 公里。", "dur": 40, "uses": ["Heritage", "Environment", "Site surveys"]}, {"slug": "white-model", "cn": "白模投影", "en": "Projection on White Model", "cat": "实证影像", "film": "How a Flattened City Grew Back", "line": "投影机把数据一层层刷上鹿特丹白模：从 1940 年的空洞到今天的塔楼。", "dur": 40, "uses": ["Urban planning", "Exhibitions", "City data"]}, {"slug": "data-physical", "cn": "数据实物化", "en": "Data Physicalization", "cat": "实证影像", "film": "Two Spirals", "line": "十二年风电和太阳能装机叠成实物，绕表盘升成两条螺旋，2021 年太阳能反超。", "dur": 39, "uses": ["Annual reports", "Investor decks", "Energy data"]}, {"slug": "teardown", "cn": "产品拆解", "en": "Exploded Teardown", "cat": "实证影像", "film": "21 Keys, Opened", "line": "开源键盘的一半在一次环绕中逐层拆开，看到主控再合拢，标上真实尺寸。", "dur": 39, "uses": ["Hardware launches", "Product pages", "Spec explainers"]}, {"slug": "microscope", "cn": "显微叙事", "en": "Microscope Story", "cat": "实证影像", "film": "Measured Blue", "line": "一镜从肝组织玻片推到单个细胞核，两个圆逐像素数出 2.4 倍的蓝。", "dur": 40, "uses": ["Biomedicine", "Materials science", "Skincare science"]}, {"slug": "archive-lighttable", "cn": "档案灯台", "en": "Archive Light Table", "cat": "实证影像", "film": "Two Seconds Short", "line": "电报说最长飞了 57 秒；放大镜下，莱特兄弟的底片和档案说是 59 秒。", "dur": 40, "uses": ["Brand history", "Archive stories", "Museums"]}, {"slug": "crayon-book", "cn": "蜡笔儿童绘本", "en": "Crayon Picture Book", "cat": "手绘与绘画", "film": "The Moon Can't Sleep", "line": "月亮失眠了，小女孩爬上屋顶给它唱摇篮曲。", "dur": 52, "uses": ["Picture books", "Bedtime stories", "Kids' learning"]}, {"slug": "watercolor", "cn": "水彩笔刷", "en": "Watercolor Brush", "cat": "手绘与绘画", "film": "Follow the Rain", "line": "跟着降雨从澳洲红色腹地一路画到绿色海岸，一镜到底。", "dur": 114, "uses": ["Nature documentary", "Travel", "Science explainers"]}, {"slug": "ink-wash", "cn": "中国水墨", "en": "Chinese Ink Wash", "cat": "手绘与绘画", "film": "The Swordsman and the River", "line": "侠客踏水过江，一剑断流。", "dur": 48, "uses": ["Wuxia", "Cultural brands", "Poetry"]}, {"slug": "impasto", "cn": "油画厚涂", "en": "Impasto Oil Painting", "cat": "手绘与绘画", "film": "The Colour of Rain", "line": "灰色雨中广场，第一把红伞撑开，圆舞曲把整个广场刷上颜色。", "dur": 40, "uses": ["Music videos", "Art & culture", "Emotional ads"]}, {"slug": "one-line", "cn": "一笔画", "en": "One-line Drawing", "cat": "手绘与绘画", "film": "The Line That Never Lifted", "line": "一根不离纸的线画完一个人的一生，再把笔交给孩子。", "dur": 48, "uses": ["Brand stories", "Life milestones", "Minimal ads"]}, {"slug": "whiteboard", "cn": "白板讲解", "en": "Whiteboard Explainer", "cat": "手绘与绘画", "film": "Einstein in Your Pocket", "line": "手机怎么知道你在哪：GPS、原子钟，和相对论每天多出的 38 微秒。", "dur": 111, "uses": ["Explainers", "Online courses", "Science"]}, {"slug": "urban-sketch", "cn": "钢笔淡彩", "en": "Urban Sketch · Pen & Wash", "cat": "手绘与绘画", "film": "Where the Wind Went", "line": "公园只是一张钢笔速写，风把草帽吹到哪里，哪里才有颜色。", "dur": 32, "uses": ["City & travel", "Architecture", "Lifestyle brands"]}, {"slug": "shadow-puppet", "cn": "皮影戏", "en": "Shadow Puppetry", "cat": "东方传统", "film": "Hou Yi Shoots the Suns", "line": "十日炙烤大地，后羿张弓射日。", "dur": 54, "uses": ["Myths & folklore", "Heritage", "Festivals"]}, {"slug": "ukiyoe", "cn": "浮世绘", "en": "Ukiyo-e", "cat": "东方传统", "film": "Toward the Mountain", "line": "旅人走向远山，每个镜头都是一幅版画；巨浪是高潮，结尾是远山与整幅画轴拉远。", "dur": 44, "uses": ["Travel", "Japanese culture", "Poetry"]}, {"slug": "papercut-red", "cn": "红色窗花剪纸", "en": "Red Paper-cut", "cat": "东方传统", "film": "Nian Comes to Town", "line": "除夕年兽进村，小女孩剪出的大窗花照亮全村，把它吓跑。", "dur": 49, "uses": ["Lunar New Year", "Festive greetings", "Folk tales"]}, {"slug": "paper-lantern", "cn": "纸雕灯影", "en": "Paper-cut Lightbox", "cat": "东方传统", "film": "A Mooncake's Longing", "line": "一枚月饼讲中秋的团圆与思念，纸雕灯箱层层透光。", "dur": 122, "uses": ["Festivals", "Gift brands", "Cultural stories"]}, {"slug": "risograph", "cn": "Risograph 孔版印刷", "en": "Risograph Print", "cat": "印刷与版画", "film": "Sunday Ride", "line": "周日早晨骑车穿过城市：面包店、公园、河边，每到一处加一版油墨，最后三版套印。", "dur": 40, "uses": ["Indie brands", "Zines", "Lifestyle"]}, {"slug": "halftone-dossier", "cn": "复古半调案卷", "en": "Halftone Dossier", "cat": "印刷与版画", "film": "Case File: Chubby", "line": "橘猫胖橘被立案审查：测试重力、凌晨跑酷，最后无罪释放。", "dur": 30, "uses": ["Humour", "Pet content", "Social shorts"]}, {"slug": "woodcut", "cn": "木刻版画", "en": "Woodcut Print", "cat": "印刷与版画", "film": "The Bell Founder", "line": "村子用一整个冬天铸一口钟，钟声第一次响起，雪停了。", "dur": 58, "uses": ["Folk tales", "Craft brands", "Book trailers"]}, {"slug": "engraving", "cn": "铜版画", "en": "Copperplate Engraving", "cat": "印刷与版画", "film": "The Honeybee, Plate VII", "line": "一张博物志图版自己刻出来：雕刀推开铜版，蜜蜂一线线成形，最后手工水彩上色。", "dur": 40, "uses": ["Museum labels", "Science explainers", "Brand heritage"]}, {"slug": "silkscreen-poster", "cn": "丝印旅行海报", "en": "Silkscreen Travel Poster", "cat": "印刷与版画", "film": "Three Trails", "line": "三条步道各一张丝印海报，一色一刮印出来，再沿山脊一镜到底从正午爬到黄昏。", "dur": 38, "uses": ["Destination guides", "Tourism", "Event posters"]}, {"slug": "swiss-motion", "cn": "瑞士动态排版", "en": "Swiss Motion Graphics", "cat": "图形与排版", "film": "Five Rules for a Poster", "line": "一张音乐会海报按瑞士设计的五条规则自己排版，第五条是只打破一条。", "dur": 44, "uses": ["Brand identity", "Events", "Design education"]}, {"slug": "spy-titles", "cn": "60s 间谍片头", "en": "60s Spy Title Sequence", "cat": "图形与排版", "film": "The Velvet Cipher", "line": "虚构 1964 年间谍片的片头：追一把被偷的钥匙，几何碎片最后拼成片名。", "dur": 44, "uses": ["Title sequences", "Event openers", "Trailers"]}, {"slug": "art-deco", "cn": "装饰艺术", "en": "Art Deco", "cat": "图形与排版", "film": "Midnight at the Starlight Hotel", "line": "1930 年的大饭店，门童赶在午夜前把一封信送上顶楼。", "dur": 58, "uses": ["Luxury & hospitality", "Galas", "Invitations"]}, {"slug": "blueprint", "cn": "蓝图 / 工程制图", "en": "Blueprint", "cat": "图形与排版", "film": "Patent Pending: The Cloud Catcher", "line": "发明家的蓝图自己画出一台接云机器，修订云线变成了真的雨云。", "dur": 47, "uses": ["Engineering", "Hardware launches", "Tech explainers"]}, {"slug": "stained-glass", "cn": "彩色玻璃窗", "en": "Stained Glass", "cat": "图形与排版", "film": "The Dragon of the East Window", "line": "阳光从清晨移到黄昏，照到哪一格花窗，哪一格的故事就动起来。", "dur": 56, "uses": ["Legends", "Heritage", "Holiday stories"]}, {"slug": "pictogram-motion", "cn": "象形运动图形", "en": "Pictogram Motion", "cat": "图形与排版", "film": "Aichi-Nagoya 2026 — All 43 Sports", "line": "2026 亚运会 43 个大项，几何象形人卡着节拍快闪。", "dur": 164, "uses": ["Sports events", "Visual identity", "Event openers"]}, {"slug": "ascii-crt", "cn": "ASCII / CRT 终端", "en": "ASCII / CRT Terminal", "cat": "图形与排版", "film": "Tranquility.log", "line": "月球基地的 AI 沉睡 40 年后被唤醒，用字符画出“家”来回复。", "dur": 60, "uses": ["Developer tools", "Sci-fi", "Tech brands"]}, {"slug": "dataviz", "cn": "数据叙事", "en": "Data Storytelling", "cat": "信息与发布", "film": "A Hundred Summers", "line": "一百年的夏季气温，图表本身就是故事。", "dur": 50, "uses": ["Data journalism", "Reports", "Climate & science"]}, {"slug": "iso-infographic", "cn": "等距信息图", "en": "Isometric Infographic", "cat": "信息与发布", "film": "From Bean to Cup", "line": "一杯咖啡从种植园到你手里的旅程。", "dur": 59, "uses": ["Process explainers", "Supply chains", "Annual reports"]}, {"slug": "dark-keynote", "cn": "暗色科技发布", "en": "Dark Tech Keynote", "cat": "信息与发布", "film": "Room to Think", "line": "虚构 app Tidy 的发布片：被埋掉的光标一键把几百个窗口归位。", "dur": 42, "uses": ["Product launches", "SaaS", "Keynotes"]}, {"slug": "living-screencast", "cn": "活体实机录屏", "en": "Living Screencast", "cat": "信息与发布", "film": "Clawd Moves In", "line": "像素小人 Clawd 搬进 Claude 应用，一镜到底演示 Plan 模式和自检。", "dur": 59, "uses": ["Product tutorials", "Feature launches", "Onboarding"]}, {"slug": "hologram-hud", "cn": "科幻全息界面", "en": "Sci-fi Hologram HUD", "cat": "信息与发布", "film": "Volt · Spec Scan", "line": "电助力车被扫描成全息线框，目标框依次锁定电池、电机、刹车。", "dur": 39, "uses": ["Spec walkthroughs", "Launch videos", "Trade shows"]}, {"slug": "rubber-hose", "cn": "1930s 橡皮管卡通", "en": "1930s Rubber Hose Cartoon", "cat": "卡通与动画", "film": "Coffee Cup Chase", "line": "一只咖啡杯满厨房追一块逃跑的方糖。", "dur": 50, "uses": ["Food & drink", "Retro ads", "Kids"]}, {"slug": "cel-anime-80s", "cn": "80 年代赛璐璐动画", "en": "80s Cel Anime", "cat": "卡通与动画", "film": "City Lights, 1987", "line": "快递少女骑车穿过雨后霓虹都市，赶在黎明发射前送到一盘磁带。", "dur": 59, "uses": ["Music videos", "Game trailers", "Nostalgia"]}, {"slug": "scifi-toon", "cn": "科幻情景喜剧卡通", "en": "Sci-Fi Sitcom Toon", "cat": "卡通与动画", "film": "Coffee Run", "line": "厌世天才开传送门只想买杯咖啡，却穿过越来越离谱的平行宇宙。", "dur": 58, "uses": ["Comedy", "Tech brands", "Social shorts"]}, {"slug": "midcentury-toon", "cn": "50s 扁平卡通", "en": "Mid-century Cartoon", "cat": "卡通与动画", "film": "Meet Pip", "line": "用 50 年代教育片的口吻，三步教你装好一台扫地机。", "dur": 40, "uses": ["Set-up guides", "Help centres", "How-to"]}, {"slug": "pixel-rpg", "cn": "16-bit 像素 RPG", "en": "16-bit Pixel RPG", "cat": "游戏", "film": "The Last Save Point", "line": "勇士在最终 Boss 门前存档，存档画面闪回一路冒险。", "dur": 54, "uses": ["Game trailers", "Recaps", "Nostalgia"]}, {"slug": "hd-2d", "cn": "HD-2D", "en": "HD-2D", "cat": "游戏", "film": "The Lampbearer", "line": "灯塔熄灭，孙女提着最后一簇火穿过夜林、爬上风暴悬崖。", "dur": 76, "uses": ["Game trailers", "Fantasy", "Story films"]}, {"slug": "microgame", "cn": "微游戏快闪", "en": "Microgame Frenzy", "cat": "游戏", "film": "Five-Second Astronaut", "line": "见习宇航员闯五秒训练营，越来越快，Boss 关亲手降落回地球。", "dur": 60, "uses": ["Game trailers", "Onboarding", "Social shorts"]}, {"slug": "game-show", "cn": "综艺节奏扁平", "en": "Game Show Flat", "cat": "游戏", "film": "Rhythm of AI, 1997 → 2026", "line": "把 AI 发展史做成一局节奏游戏，模型踩着拍登场，最后发成绩单。", "dur": 149, "uses": ["Tech timelines", "Year in review", "Variety shows"]}, {"slug": "silent-film", "cn": "1920s 默片", "en": "1920s Silent Film", "cat": "电影与时代", "film": "The Runaway Loaf", "line": "面包店学徒追一个滚走的面包，最后掰成两半分给饿肚子的小女孩。", "dur": 54, "uses": ["Comedy", "Retro brands", "Silent storytelling"]}, {"slug": "backrooms", "cn": "后室 / 新怪谈", "en": "Liminal Found Footage", "cat": "电影与时代", "film": "Night Shift Orientation", "line": "新夜班员工拍下入职第一晚：无尽的黄色办公空间，和墙上的员工守则。", "dur": 60, "uses": ["Horror", "Mystery & ARG", "Game teasers"]}, {"slug": "brick-toy", "cn": "积木玩具", "en": "Brick Toy", "cat": "材质与 3D", "film": "Rocket from Spare Parts", "line": "积木宇航员用零件拼出火箭，飞向积木月亮。", "dur": 54, "uses": ["Toys & kids", "Product builds", "Space"]}, {"slug": "paper-popup", "cn": "纸片立体书", "en": "Paper Pop-up Book", "cat": "材质与 3D", "film": "Pip's Paper Adventure", "line": "立体书在书桌上打开，小精灵 Pip 在纸片世界冒险，最后跳出书外。", "dur": 133, "uses": ["Children's books", "Game trailers", "Story films"]}, {"slug": "tilt-shift", "cn": "移轴微缩", "en": "Tilt-Shift Miniature", "cat": "材质与 3D", "film": "Toy Town Rush Hour", "line": "玩具城的早高峰，一切都像模型。", "dur": 38, "uses": ["City promos", "Real estate", "Transport"]}, {"slug": "lowpoly-island", "cn": "低多边形等距", "en": "Low-poly Isometric Island", "cat": "材质与 3D", "film": "The Island That Grew", "line": "空海里一格格长出小岛和村庄，每放一块响一个音符，直到星空。", "dur": 53, "uses": ["Game trailers", "World building", "Calm content"]}, {"slug": "glass-product", "cn": "玻璃质感产品", "en": "Glass Product Render", "cat": "材质与 3D", "film": "Aura — Hear the Light", "line": "虚构玻璃耳机 Aura 的开箱与特写。", "dur": 32, "uses": ["Product launches", "Consumer tech", "Beauty"]}], "lemoCats": [["剪辑与纪实", 8], ["实证影像", 8], ["手绘与绘画", 7], ["东方传统", 4], ["印刷与版画", 5], ["图形与排版", 7], ["信息与发布", 5], ["卡通与动画", 4], ["游戏", 4], ["电影与时代", 2], ["材质与 3D", 5]], "mg": [{"id": "05-cel-boil", "cn": "逐帧手绘 / 线条沸腾", "film": "手作 HAND MADE", "en": "Frame-by-Frame / Line Boil", "score": "8.07", "vis": ["线条持续微抖(boil)", "一拍二/一拍三节奏", "smear拖影帧", "手绘烟火水花点缀", "纸纹底"], "sig": "手绘逐帧或在矢量动画上叠加逐帧质感，标志性特征是 line boil——线条每隔几帧轻微抖动，仿佛画面在'呼吸'。", "route": "HTML Canvas2D: custom variable-width brush renderer", "vertical": false}, {"id": "03-isometric", "cn": "等轴 2.5D", "film": "ISOPOLIS「让城市自己生长」", "en": "Isometric 2.5D", "score": "8.00", "vis": ["30°等角投影", "无透视灭点", "微缩场景", "楼房生长动画", "平行滑轨式运镜"], "sig": "以 30° 等轴测投影展示微缩世界：小城市、办公室切片、数据机房，无灭点、处处等比。", "route": "HTML: Three.js OrthographicCamera at true isometric angle + soft shadows + AO", "vertical": false}, {"id": "01-flat-vector", "cn": "扁平矢量动画", "film": "popwise「One Dot」", "en": "Flat Vector", "score": "7.64", "vis": ["纯色大色块", "几何化角色", "无渐变或极少渐变", "干净留白", "高饱和品牌色板"], "sig": "MG 动画最主流的基本盘风格，源自 Google Material/企业解释视频（explainer）传统。", "route": "HTML: SVG + GSAP", "vertical": false}, {"id": "02-line-art", "cn": "线条动画", "film": "ATELIER LINEA「一笔画」", "en": "Line Art", "score": "7.64", "vis": ["等宽细线", "单色或双色", "大量负空间", "线条连续生长", "线面转换瞬间"], "sig": "以单色细线为唯一造型语言，线条自我描绘（draw-on）、延伸、转折并变形为下一个图形，一笔连成整支片子。", "route": "HTML: SVG paths + stroke-dashoffset", "vertical": false}, {"id": "04-3d-render", "cn": "3D 渲染系", "film": "soft.「柔软着陆」 · C4D/Blender 质感", "en": "3D Render", "score": "7.71", "vis": ["PBR真实材质", "浅景深", "柔和棚拍布光", "克隆器阵列", "软体碰撞"], "sig": "Cinema 4D + Redshift/Octane 或 Blender 渲染的实体质感动画：软胶、玻璃、金属、布料，配合克隆阵列和物理模拟。", "route": "Blender 5.1.2 CLI", "vertical": false}, {"id": "08-morph", "cn": "形变动画", "film": "morphe.「一形万象」", "en": "Shape Morph", "score": "7.64", "vis": ["轮廓连续过渡无跳变", "中介形状桥接", "形变伴随位移旋转", "变形瞬间的挤压拉伸"], "sig": "一个图形丝滑连续地变成另一个图形：手机变成地图钉、咖啡杯变成落日。", "route": "HTML: SVG + flubber or GSAP MorphSVGPlugin", "vertical": false}, {"id": "19-paperclip", "cn": "粗描边贴纸人科普 MG", "film": "一部手机里，藏着多少种元素？", "en": "Sticker Explainer", "score": "7.71", "vis": ["照片贴纸化（粗白描边）", "蓝灰/米白冷静底色", "扁平图标+精确数据图表", "大画布镜头平移缩放", "信息密度极高的节拍化叙事"], "sig": "回形针 PaperClip 带火的知识区标准包装：实拍图片抠图后加粗白描边变成『贴纸』，与扁平图标、数据图表一起铺在大画布上，镜头平移缩放串联信息点；林超等财经/跨学科 UP 主将其与手写板书、公式卡片结合。", "route": "HTML: one huge canvas", "vertical": false}, {"id": "22-hud", "cn": "赛博朋克 HUD / FUI", "film": "隼眼-9 · 目标锁定", "en": "Cyberpunk HUD / FUI", "score": "7.93", "vis": ["青色/橙色霓虹线框", "目标锁定框与十字准星", "雷达/环形扫描 loop", "等宽小字数据流与打字机文字", "六边形网格与辉光"], "sig": "模拟科幻电影/游戏界面的抬头显示包装：青橙霓虹线框、目标锁定框、雷达扫描、数据流小字。", "route": "HTML: SVG/Canvas FUI layers + Three.js wireframe hologram", "vertical": false}, {"id": "06-collage", "cn": "拼贴剪贴", "film": "NOGGIN 脑洞季刊", "en": "Collage / Cut-out", "score": "8.14", "vis": ["照片剪影白描边", "半调网点", "报纸纹理", "比例失衡的超现实拼装", "定格式抽帧运动"], "sig": "把老照片、报纸、手撕纸片剪出来重新拼装的复古超现实风格，源头是 Monty Python 和苏联构成主义海报。", "route": "HTML: DOM/Canvas with PNG cutouts from /assets/images", "vertical": false}, {"id": "12-aurora-glass", "cn": "弥散渐变 / 玻璃拟态", "film": "Aurora「思考，自有光」", "en": "Aurora & Glassmorphism", "score": "8.07", "vis": ["大色斑高斯模糊漂移", "磨砂玻璃卡片", "1px高光描边", "邻近色低对比配色", "缓慢呼吸感节奏"], "sig": "大面积高斯模糊的彩色光斑（aurora/mesh gradient）缓慢漂移作底，磨砂半透明玻璃卡片浮在其上。", "route": "HTML WebGL: aurora mesh-gradient shader + glass refraction", "vertical": false}, {"id": "09-bauhaus", "cn": "几何构成 / 包豪斯", "film": "二十拍构成 KONSTRUKTION", "en": "Geometric Bauhaus", "score": "7.71", "vis": ["基础几何形", "红黄蓝黑限定色", "严格网格对齐", "旋转以几何中心为轴", "节拍驱动的模块化运动"], "sig": "圆、三角、矩形在严格网格上做精确的平移、旋转、缩放，三原色+黑白的限定色板，机械理性的秩序美。", "route": "HTML: SVG/Canvas + GSAP on a strict modular grid, beat grid at 120 BPM", "vertical": false}, {"id": "10-synthwave", "cn": "复古 80s Synthwave / VHS", "film": "NEON DRIVE「霓虹夜驰 1986」", "en": "80s Synthwave / VHS", "score": "8.21", "vis": ["霓虹辉光", "透视网格地平线", "扫描线与RGB色偏", "镀铬金属字", "酸性配色"], "sig": "对特定年代媒介美学的整体引用：80s synthwave 是霓虹网格+日落渐变+镀铬字；VHS 是扫描线+色偏+磁带噪声；Y2K 千禧风是液态镀铬金属、酸性绿紫、拟物系统窗口和低保真 3D。", "route": "HTML WebGL", "vertical": false}, {"id": "20-pixel", "cn": "像素风", "film": "PIXEL QUEST 像素冒险", "en": "Pixel Art", "score": "8.07", "vis": ["大颗粒像素与硬边缘", "有限色板(8~32色)", "8~12fps 精灵帧动画", "抖动渐变 dithering", "CRT 扫描线滤镜"], "sig": "低分辨率大颗粒像素 + 有限色板 + 低帧率精灵动画的复古游戏美学，在 B 站游戏区（MC、泰拉瑞亚、独立游戏）、8-bit 音乐 MV 和品牌怀旧营销中常见；Aseprite 教程在 B 站有 10 万+ 播放的稳定学习生态。", "route": "HTML Canvas at 320×180 internal resolution, integer-scaled ×6 with nearest-neighbour", "vertical": false}, {"id": "07-liquid", "cn": "液态流动", "film": "drop.「万物始于一滴」", "en": "Liquid Motion", "score": "7.57", "vis": ["波浪边缘转场", "拉丝与滴落", "metaball融合", "次级液滴跟随", "有机曲线永不直线"], "sig": "图形像液体一样流动、拉丝、滴落、融合：转场是一泼颜料漫过屏幕，logo 从一滴液体聚合成形。", "route": "HTML WebGL2 fragment shader: 2D SDF metaballs", "vertical": false}, {"id": "18-hanazi", "cn": "综艺花字", "film": "喵呜日记 EP.07 · 9:16 竖屏", "en": "Variety Captions", "score": "7.64", "vis": ["多层描边圆体/胖体字", "高饱和撞色+白边+投影", "弹性 pop 入场", "配合音效出现", "手绘装饰符号（爆炸框/汗滴/闪光）"], "sig": "源自电视综艺后期的情绪化装饰字幕：多层描边圆体字带弹性入场，跟随人物情绪变色变形，配打击音效。", "route": "HTML DOM/SVG: multi-layer text-stroke 花字 components + spring pops + SVG burst/sweat/sparkle decorations over a pet-vlog footage layer", "vertical": true}], "pdJohn": ["https://github.com/user-attachments/assets/7d6164ff-6706-40bb-bdf5-099d86e583e1", "https://github.com/user-attachments/assets/d1c91375-3863-45f5-b7da-5e8b9c987b64"], "mx": ["https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig01.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig02.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig03.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig04.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig05.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig06.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig07.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig08.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig09.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig10.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig11.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig12.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig13.jpg", "https://raw.githubusercontent.com/mexicat/pdoom-video/main/app/public/plates/fig14.jpg"], "sk": [{"slug": "anabology-491441", "author": "anabology", "cat": "动态图形", "tags": ["canvas", "ai-image"], "post": "https://x.com/anabology/status/2103534482930491441", "remake": true}, {"slug": "moritzkremb-466494", "author": "moritzkremb", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/moritzkremb/status/2103066071838466494", "remake": true}, {"slug": "melvynx-638493", "author": "melvynx", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/melvynx/status/2103714680577638493", "remake": true}, {"slug": "ajith-io-208546", "author": "ajith_io", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/ajith_io/status/2103469807375208546", "remake": true}, {"slug": "daniel-mac8-306214", "author": "daniel_mac8", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/daniel_mac8/status/2103824976713306214", "remake": true}, {"slug": "prasad-pilla-496049", "author": "prasad_pilla", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/prasad_pilla/status/2103728953785496049", "remake": true}, {"slug": "itsolelehmann-762215", "author": "itsolelehmann", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/itsolelehmann/status/2103124033365762215", "remake": true}, {"slug": "ishaaqahamed-107563", "author": "Ishaaqahamed", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/Ishaaqahamed/status/2103837917538107563", "remake": true}, {"slug": "heyiammallik-293397", "author": "heyiammallik", "cat": "动态图形", "tags": ["threejs", "canvas"], "post": "https://x.com/heyiammallik/status/2103837803587293397", "remake": true}, {"slug": "ann-nnng-852885", "author": "ann_nnng", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/ann_nnng/status/2103723183899852885", "remake": true}, {"slug": "ajith-io-615243", "author": "ajith_io", "cat": "动态图形", "tags": ["canvas", "particles"], "post": "https://x.com/ajith_io/status/2103541149709615243", "remake": true}, {"slug": "0xfemyn-137833", "author": "0xfemyn", "cat": "动态图形", "tags": ["canvas", "svg", "css"], "post": "https://x.com/0xfemyn/status/2103796337041137833", "remake": true}, {"slug": "prasenx-693512", "author": "prasenx", "cat": "动态图形", "tags": ["shader", "canvas", "audio"], "post": "https://x.com/prasenx/status/2103538744695693512", "remake": true}, {"slug": "brainextends-606193", "author": "brainextends", "cat": "动态图形", "tags": ["shader", "svg"], "post": "https://x.com/brainextends/status/2103801834930606193", "remake": true}, {"slug": "pankajkumar-dev-718609", "author": "pankajkumar_dev", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/pankajkumar_dev/status/2103502614134718609", "remake": true}, {"slug": "nolkeeg-635633", "author": "nolkeeg", "cat": "动态图形", "tags": ["canvas", "particles"], "post": "https://x.com/nolkeeg/status/2103841917603635633", "remake": true}, {"slug": "1littlecoder-378066", "author": "1littlecoder", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/1littlecoder/status/2103746736980378066", "remake": true}, {"slug": "ezshine-750731", "author": "ezshine", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/ezshine/status/2103501705698750731", "remake": true}, {"slug": "songkeys-384673", "author": "songkeys", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/songkeys/status/2102743212922384673", "remake": true}, {"slug": "jackfriks-338762", "author": "jackfriks", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/jackfriks/status/2103132260589338762", "remake": true}, {"slug": "sab8a-475686", "author": "sab8a", "cat": "动态图形", "tags": ["canvas", "ai-image"], "post": "https://x.com/sab8a/status/2103144778481475686", "remake": true}, {"slug": "viktoroddy-402509", "author": "viktoroddy", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/viktoroddy/status/2103802280617402509", "remake": true}, {"slug": "kloss-xyz-941143", "author": "kloss_xyz", "cat": "动态图形", "tags": ["canvas", "audio"], "post": "https://x.com/kloss_xyz/status/2103664956482941143", "remake": true}, {"slug": "monokern-832979", "author": "monokern", "cat": "动态图形", "tags": ["shader", "webgl", "canvas"], "post": "https://x.com/monokern/status/2103563538828832979", "remake": true}, {"slug": "zheke-622583", "author": "zheke", "cat": "动态图形", "tags": ["shader", "webgl", "canvas"], "post": "https://x.com/zheke/status/2103418664854622583", "remake": true}, {"slug": "dale-vaz-879074", "author": "dale_vaz", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/dale_vaz/status/2103290592679879074", "remake": true}, {"slug": "chatgptastra-807540", "author": "ChatGptAstra", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/ChatGptAstra/status/2103834787647807540", "remake": true}, {"slug": "spearwtf-029058", "author": "SPEARwtf", "cat": "动态图形", "tags": ["threejs", "canvas"], "post": "https://x.com/SPEARwtf/status/2103857153308029058", "remake": true}, {"slug": "majorbaguette-834228", "author": "MajorBaguette", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/MajorBaguette/status/2103849602826834228", "remake": true}, {"slug": "miskinho-956105", "author": "miskinho_", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/miskinho_/status/2103847584531956105", "remake": true}, {"slug": "felipemoller-936736", "author": "felipemoller", "cat": "动态图形", "tags": ["threejs", "svg", "gsap"], "post": "https://x.com/felipemoller/status/2103846311149936736", "remake": true}, {"slug": "ho-ba-761062", "author": "HO_BA", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/HO_BA/status/2103845264649761062", "remake": true}, {"slug": "howdevelop-733090", "author": "HowDevelop", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/HowDevelop/status/2103840883812733090", "remake": true}, {"slug": "miaai-lab-774895", "author": "MiaAI_lab", "cat": "动态图形", "tags": ["shader", "webgl", "canvas"], "post": "https://x.com/MiaAI_lab/status/2103837519615774895", "remake": true}, {"slug": "gouthamjay8-910269", "author": "gouthamjay8", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/gouthamjay8/status/2103816261339910269", "remake": true}, {"slug": "marklaunches-041046", "author": "marklaunches", "cat": "动态图形", "tags": ["canvas", "svg"], "post": "https://x.com/marklaunches/status/2103811146411041046", "remake": true}, {"slug": "kmasiff-549880", "author": "KmAsiff", "cat": "动态图形", "tags": ["svg"], "post": "https://x.com/KmAsiff/status/2103810247131549880", "remake": true}, {"slug": "triglyceee-161719", "author": "TrigLyceee", "cat": "动态图形", "tags": ["svg", "css"], "post": "https://x.com/TrigLyceee/status/2103804459986161719", "remake": true}, {"slug": "mounnna-497266", "author": "Mounnna", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/Mounnna/status/2103802871934497266", "remake": true}, {"slug": "johnsavage-ai-427263", "author": "johnsavage_ai", "cat": "动态图形", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/johnsavage_ai/status/2103792769982427263", "remake": true}, {"slug": "rammanq-034553", "author": "rammanq", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/rammanq/status/2103788796022034553", "remake": true}, {"slug": "ratheejaisal-154698", "author": "RatheeJaisal", "cat": "动态图形", "tags": ["canvas", "svg"], "post": "https://x.com/RatheeJaisal/status/2103774864742154698", "remake": true}, {"slug": "wani-shola-459278", "author": "wani_shola", "cat": "动态图形", "tags": ["svg", "gsap"], "post": "https://x.com/wani_shola/status/2103769906638459278", "remake": true}, {"slug": "robvjourney-237474", "author": "robvjourney", "cat": "动态图形", "tags": ["canvas", "svg"], "post": "https://x.com/robvjourney/status/2103768390322237474", "remake": true}, {"slug": "lester-tyy-480587", "author": "lester_tyy", "cat": "动态图形", "tags": ["svg"], "post": "https://x.com/lester_tyy/status/2103733819568480587", "remake": true}, {"slug": "pound75423-464968", "author": "pound75423", "cat": "动态图形", "tags": ["canvas", "css"], "post": "https://x.com/pound75423/status/2103722556918464968", "remake": true}, {"slug": "souravbhar871-477361", "author": "souravbhar871", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/souravbhar871/status/2103711849703477361", "remake": true}, {"slug": "gautam-mer1-530003", "author": "gautam_mer1", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/gautam_mer1/status/2103703336780530003", "remake": true}, {"slug": "doubleunplussed-181894", "author": "doubleunplussed", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/doubleunplussed/status/2103697580421181894", "remake": true}, {"slug": "bizibeast-505124", "author": "bizibeast", "cat": "动态图形", "tags": ["svg", "gsap", "css"], "post": "https://x.com/bizibeast/status/2103696876130505124", "remake": true}, {"slug": "groundcontrol-230877", "author": "GroundControl", "cat": "动态图形", "tags": ["canvas", "audio"], "post": "https://x.com/GroundControl/status/2103678647777230877", "remake": true}, {"slug": "ceowinkz-683602", "author": "ceowinkz", "cat": "动态图形", "tags": ["canvas", "svg"], "post": "https://x.com/ceowinkz/status/2103647124126683602", "remake": true}, {"slug": "xanderwow-a-597063", "author": "Xanderwow_A", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/Xanderwow_A/status/2103637769012597063", "remake": true}, {"slug": "iammxfschr-955831", "author": "iamMXFSCHR", "cat": "动态图形", "tags": ["gsap"], "post": "https://x.com/iamMXFSCHR/status/2103619221296955831", "remake": true}, {"slug": "sachaarbonel-673648", "author": "sachaarbonel", "cat": "动态图形", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/sachaarbonel/status/2103614797501673648", "remake": true}, {"slug": "manuelogomigo-052364", "author": "manuelogomigo", "cat": "动态图形", "tags": ["canvas", "svg"], "post": "https://x.com/manuelogomigo/status/2103614667038052364", "remake": true}, {"slug": "chrisjdimarco-808196", "author": "chrisjdimarco", "cat": "动态图形", "tags": ["canvas"], "post": "https://x.com/chrisjdimarco/status/2103606498928808196", "remake": true}, {"slug": "madhav-xo-524440", "author": "Madhav_XO", "cat": "动态图形", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/Madhav_XO/status/2103605007396524440", "remake": true}, {"slug": "ror-fly-880547", "author": "Ror_Fly", "cat": "讲解", "tags": ["canvas"], "post": "https://x.com/Ror_Fly/status/2102853258582880547", "remake": true}, {"slug": "deedydas-252537", "author": "deedydas", "cat": "讲解", "tags": ["svg", "gsap"], "post": "https://x.com/deedydas/status/2102787937482252537", "remake": true}, {"slug": "sudo-kiran-335993", "author": "sudo_kiran", "cat": "讲解", "tags": ["canvas", "svg", "gsap"], "post": "https://x.com/sudo_kiran/status/2103761658745335993", "remake": true}, {"slug": "0xvalure-331584", "author": "0xValure", "cat": "讲解", "tags": ["threejs", "canvas"], "post": "https://x.com/0xValure/status/2103603025579331584", "remake": true}, {"slug": "verbove-268381", "author": "verbove", "cat": "讲解", "tags": ["canvas"], "post": "https://x.com/verbove/status/2103483957266268381", "remake": true}, {"slug": "ajith-io-562538", "author": "ajith_io", "cat": "讲解", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/ajith_io/status/2103800569584562538", "remake": true}, {"slug": "linearuncle-971663", "author": "LinearUncle", "cat": "讲解", "tags": ["svg", "audio"], "post": "https://x.com/LinearUncle/status/2103128559174971663", "remake": true}, {"slug": "alex-prompter-997524", "author": "alex_prompter", "cat": "讲解", "tags": ["svg", "gsap"], "post": "https://x.com/alex_prompter/status/2103499977632997524", "remake": true}, {"slug": "emollick-019567", "author": "emollick", "cat": "讲解", "tags": ["canvas"], "post": "https://x.com/emollick/status/2103688362960019567", "remake": true}, {"slug": "kloss-xyz-067876", "author": "kloss_xyz", "cat": "讲解", "tags": ["canvas", "svg", "css"], "post": "https://x.com/kloss_xyz/status/2103652674336067876", "remake": true}, {"slug": "henkvaness-975279", "author": "henkvaness", "cat": "讲解", "tags": ["svg"], "post": "https://x.com/henkvaness/status/2103801351993975279", "remake": true}, {"slug": "amitsingha89-780553", "author": "AmitSingha89", "cat": "讲解", "tags": ["svg"], "post": "https://x.com/AmitSingha89/status/2103737604277780553", "remake": true}, {"slug": "tak3sh8-441895", "author": "tak3sh8", "cat": "讲解", "tags": ["canvas", "audio"], "post": "https://x.com/tak3sh8/status/2103667481139441895", "remake": true}, {"slug": "astrothewizard-618782", "author": "AstroTheWizard", "cat": "讲解", "tags": ["canvas"], "post": "https://x.com/AstroTheWizard/status/2103629247751618782", "remake": true}, {"slug": "sudo-kiran-254201", "author": "sudo_kiran", "cat": "讲解", "tags": ["canvas", "svg", "css"], "post": "https://x.com/sudo_kiran/status/2103486573476254201", "remake": true}, {"slug": "sarut0bisasuke-069973", "author": "Sarut0biSasuke", "cat": "讲解", "tags": ["canvas"], "post": "https://x.com/Sarut0biSasuke/status/2103418429248069973", "remake": true}, {"slug": "twoclipping-000267", "author": "twoclipping", "cat": "3D 场景", "tags": ["svg", "css"], "post": "https://x.com/twoclipping/status/2102554209166000267", "remake": true}, {"slug": "morse-369333", "author": "__morse", "cat": "3D 场景", "tags": ["svg"], "post": "https://x.com/__morse/status/2103485566570369333", "remake": true}, {"slug": "lukasersil-726495", "author": "lukasersil", "cat": "3D 场景", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/lukasersil/status/2103742861971726495", "remake": true}, {"slug": "bthreeagency-827092", "author": "BThreeAgency", "cat": "3D 场景", "tags": ["canvas", "svg", "css"], "post": "https://x.com/BThreeAgency/status/2103739079745827092", "remake": true}, {"slug": "alexalbert-274839", "author": "alexalbert__", "cat": "3D 场景", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/alexalbert__/status/2102466523164274839", "remake": true}, {"slug": "michaelzsguo-782312", "author": "Michaelzsguo", "cat": "3D 场景", "tags": ["shader", "canvas"], "post": "https://x.com/Michaelzsguo/status/2102592355165782312", "remake": true}, {"slug": "twoclipping-496100", "author": "twoclipping", "cat": "3D 场景", "tags": ["canvas"], "post": "https://x.com/twoclipping/status/2103835273813496100", "remake": true}, {"slug": "axtonliu-290566", "author": "AxtonLiu", "cat": "3D 场景", "tags": ["shader", "webgl"], "post": "https://x.com/AxtonLiu/status/2103119648271290566", "remake": true}, {"slug": "mdaman010-111079", "author": "mdaman010", "cat": "3D 场景", "tags": ["threejs", "shader", "svg"], "post": "https://x.com/mdaman010/status/2103845689713111079", "remake": true}, {"slug": "buildfastwithai-597035", "author": "BuildFastWithAI", "cat": "3D 场景", "tags": ["threejs", "canvas"], "post": "https://x.com/BuildFastWithAI/status/2103483174957597035", "remake": true}, {"slug": "anirockshady-032809", "author": "anirockshady", "cat": "3D 场景", "tags": ["threejs", "shader", "svg"], "post": "https://x.com/anirockshady/status/2103195903012032809", "remake": true}, {"slug": "anilraok-009118", "author": "Anilraok", "cat": "3D 场景", "tags": ["threejs", "canvas"], "post": "https://x.com/Anilraok/status/2103087766662009118", "remake": true}, {"slug": "ishuagra02-678129", "author": "ishuagra02", "cat": "3D 场景", "tags": ["threejs", "shader", "particles"], "post": "https://x.com/ishuagra02/status/2102920408743678129", "remake": true}, {"slug": "demitiyageekzen-818523", "author": "DemitiyaGeekzen", "cat": "3D 场景", "tags": ["shader", "webgl", "canvas"], "post": "https://x.com/DemitiyaGeekzen/status/2103517910274818523", "remake": true}, {"slug": "mandelduck-768972", "author": "MandelDuck", "cat": "游戏与交互", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/MandelDuck/status/2103802923465768972", "remake": true}, {"slug": "gandamu-ml-220530", "author": "gandamu_ml", "cat": "游戏与交互", "tags": ["threejs", "shader", "canvas"], "post": "https://x.com/gandamu_ml/status/2102919394775220530", "remake": true}, {"slug": "0xchuckstock-879327", "author": "0xChuckstock", "cat": "游戏与交互", "tags": ["threejs", "shader", "playable"], "post": "https://x.com/0xChuckstock/status/2103804606794879327", "remake": true}, {"slug": "zacxbt-944604", "author": "zacxbt", "cat": "游戏与交互", "tags": ["canvas", "pixel", "playable"], "post": "https://x.com/zacxbt/status/2103808699466944604", "remake": true}, {"slug": "lexnlin-241739", "author": "LexnLin", "cat": "游戏与交互", "tags": ["threejs", "shader"], "post": "https://x.com/LexnLin/status/2103194052850241739", "remake": true}, {"slug": "redpersongpt-284430", "author": "redpersongpt", "cat": "游戏与交互", "tags": ["svg"], "post": "https://x.com/redpersongpt/status/2103807094554284430", "remake": true}, {"slug": "froessell-562325", "author": "froessell", "cat": "游戏与交互", "tags": ["threejs", "canvas", "physics"], "post": "https://x.com/froessell/status/2103789415323562325", "remake": true}, {"slug": "aisongman-461057", "author": "aisongman", "cat": "游戏与交互", "tags": ["canvas", "pixel", "playable"], "post": "https://x.com/aisongman/status/2103763192971461057", "remake": true}, {"slug": "bilimfili1-459762", "author": "Bilimfili1", "cat": "游戏与交互", "tags": ["canvas", "svg"], "post": "https://x.com/Bilimfili1/status/2103743617848459762", "remake": true}, {"slug": "ved-cj-066575", "author": "Ved_CJ", "cat": "游戏与交互", "tags": ["threejs", "canvas"], "post": "https://x.com/Ved_CJ/status/2103708392930066575", "remake": true}, {"slug": "nolit64-347627", "author": "NoLit64", "cat": "游戏与交互", "tags": ["canvas", "audio", "playable"], "post": "https://x.com/NoLit64/status/2103628970000347627", "remake": true}, {"slug": "opener-ai-843891", "author": "opener_ai", "cat": "游戏与交互", "tags": ["canvas", "pixel", "playable"], "post": "https://x.com/opener_ai/status/2103437714695843891", "remake": true}], "skCats": [["动态图形", 58], ["讲解", 16], ["3D 场景", 14], ["游戏与交互", 12]], "joe": [{"n": "01", "title": "推理创业公司发布视频", "author": "Deedy", "type": "一句话", "file": "01-inference-startup-launch.md"}, {"n": "02", "title": "15 秒动态设计作品集（Max effort）", "author": "Stephan Livera", "type": "一句话", "file": "02-motion-showreel-15s.md"}, {"n": "03", "title": "中华五千年历史速览（线稿动画）", "author": "WY", "type": "一句话 · 中文", "file": "03-china-5000-years-lineart.md"}, {"n": "04", "title": "一个 30 秒的 Opus 5 广告（致敬苹果《1984》）", "author": "1LittleCoder", "type": "一句话", "file": "04-opus-1984-ad.md"}, {"n": "05", "title": "讲解 Transformer 的 JS 视频", "author": "宝玉", "type": "一句话 · 中文", "file": "05-transformer-explainer-js.md"}, {"n": "06", "title": "从房间一路放大到夸克", "author": "Taelin", "type": "一句话", "file": "06-room-to-quarks-zoom.md"}, {"n": "07", "title": "30 秒企业讲解片模板", "author": "Alex Prompter", "type": "模板 · 填空", "file": "07-business-explainer-30s.md"}, {"n": "08", "title": "鸡尾酒配方动态图解（Negroni）", "author": "Rory Flynn", "type": "参考图", "file": "08-negroni-recipe-explainer.md"}, {"n": "09", "title": "大气环流科普（带 TTS 旁白与双语字幕）", "author": "WY", "type": "中文 · TTS", "file": "09-atmospheric-circulation-tts.md"}, {"n": "10", "title": "真人口播改成线稿动画讲解", "author": "Axton", "type": "中文 · 改编已有视频", "file": "10-talking-head-to-lineart.md"}, {"n": "11", "title": "奥斯特里茨战役历史电影（4 到 5 分钟）", "author": "Winter", "type": "长提示词 · 参考图", "file": "11-austerlitz-film.md"}, {"n": "12", "title": "App 宣传片（Remotion，第 1 支）", "author": "Danny Stuart", "type": "Remotion", "file": "12-remotion-app-promo-1.md"}, {"n": "13", "title": "App 宣传片（Remotion，第 2 支）", "author": "Danny Stuart", "type": "Remotion", "file": "13-remotion-app-promo-2.md"}, {"n": "14", "title": "SaaS 发布片（抓真实素材）", "author": "Joe Davies", "type": "品牌 · 网络素材", "file": "14-saas-launch-real-assets.md"}, {"n": "15", "title": "UI 形态变换循环（1440×1440）", "author": "zero", "type": "专业模板", "file": "15-ui-morph-loop.md"}, {"n": "16", "title": "高端极简产品片（1920×1080，接入真实素材）", "author": "zero", "type": "专业模板 · 真实素材", "file": "16-high-end-product-video.md"}, {"n": "17", "title": "像素巫师施法动画", "author": "Majid Manzarpour", "type": "规格型", "file": "17-pixel-wizard.md"}, {"n": "18", "title": "交互式史前岛屿（Three.js）", "author": "Vib3Coded", "type": "规格型 · 3D", "file": "18-prehistoric-island-threejs.md"}], "routes": [["单 HTML + Canvas/JS 逐帧绘制", "原生 JS、Canvas 2D、Web Audio；Playwright/Puppeteer 截帧 + FFmpeg", "像素巫师、彩虹路、特殊相对论、鸡尾酒图解、UI 形态变换"], ["p5.js + 笔刷库画“手绘”动画", "p5.js、p5.brush（水彩/铅笔笔触）、无头 Chrome、FFmpeg", "P(doom) MV、Let Me Go MV、Opus 的一生"], ["Remotion（React 写视频）", "React/TypeScript、SVG、Canvas、Remotion Studio、可上 AWS 云渲染", "AI 发展史 3 分钟短片、Danny Stuart 的 App 宣传片"], ["HyperFrames 渲染 HTML 视频", "HyperFrames、单个 index.html、Python 合成音乐", "Shotbase 发布视频、Small Print 动画"], ["Manim 数学/论文讲解", "Manim、Kokoro-82M TTS、FFmpeg", "Deedy 的论文动画讲解"], ["Python 逐像素画线稿", "Python（PIL 等）、TTS、FFmpeg", "中华五千年、大气环流、口播转线稿"], ["Three.js/WebGL 三维场景", "Three.js、程序化模型/纹理/音效", "奥斯特里茨战役、史前岛屿、安提基特拉机械"], ["操控专业软件", "After Effects、Blender、Higgsfield、Runway MCP、Seedance API", "AE 发布广告、Blender 程序化镜头、超级智能纪录片"], ["剪辑已有素材", "browser-use/video-use、FFmpeg", "13 条原始素材剪成发布视频"]], "ath": [{"img": "https://raw.githubusercontent.com/athemeroy/awesome-claude-5-5-videos/main/assets/claude55-2026-10-11/2108018789468250448.jpg", "model": "Opus", "title": "Braun 唱机产品片", "note": "3D 渲染，作者自述做了 9 天，中间有多处人工决策。", "url": "https://x.com/nicceasy/status/2108018789468250448"}, {"img": "https://raw.githubusercontent.com/athemeroy/awesome-claude-5-5-videos/main/assets/claude55-2026-10-10-followup/2107548992640880755.jpg", "model": "Sonnet", "title": "高塔建造", "note": "分阶段搭起来的交互场景。", "url": "https://x.com/Solvaix/status/2107548992640880755"}, {"img": "https://raw.githubusercontent.com/athemeroy/awesome-claude-5-5-videos/main/assets/claude55-2026-10-11/2108934243636408790.jpg", "model": "Haiku", "title": "西湖素材剪辑", "note": "实拍素材剪辑，带分章和字幕，brief 里写清了素材、旁白和分段时长。", "url": "https://x.com/shengtang135754/status/2108934243636408790"}, {"img": "https://raw.githubusercontent.com/athemeroy/awesome-claude-5-5-videos/main/assets/claude55-2026-10-10-followup/2107958931230241037.jpg", "model": "Fable（作者自报）", "title": "涂鸦历史", "note": "时代变换，同一个角色反复出现。", "url": "https://x.com/oalanicolas/status/2107958931230241037"}], "athProjects": [["lemomo-ai/lemo-opuscar", "7,072", "风格库 skill（本页第一个仓库）"], ["JohnHeibel/ClaudeAnimationBase", "1,790", "p5.brush 手绘角色起步包（本页第三个仓库）"], ["makevoid/motion-graphics-music-video-skill", "184", "Claude Code 插件：给一首歌和一句提示，做动态图形 MV，会调用外部的图片、视频和音频工具"], ["Ucmp0001/video-production-skills", "30", "11 个 skill，覆盖调研、分镜、配音和字幕对时、交付"], ["nicceasy/3d-product", "15", "3D 产品片 skill：构图预览、渲染、后期，留人工把关的环节"], ["francozanardi/papermotion", "12", "纸片剪纸动画模板：角色、物理和离线渲染"]]};
+const $ = (s, el=document) => el.querySelector(s);
+const h = (tag, attrs={}, html='') => { const e=document.createElement(tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (html) e.innerHTML=html; return e; };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ext = (href, text) => `<a href="${esc(href)}" target="_blank" rel="noopener">${text}</a>`;
+const kindClass = {'可安装 skill':'k-skill','风格库':'k-style','起步模板':'k-kit','源码参考':'k-src','案例合集':'k-list','提示词合集':'k-list','研究合集':'k-list'};
+
+// facts + nav + overview
+$('#facts').innerHTML = D.facts.map(f => `<div><b>${esc(f[0])}</b><span>${esc(f[1])}</span></div>`).join('');
+$('#navlinks').innerHTML = `<a href="#overview">总览</a><a href="#pick">怎么挑</a>` + D.repos.map(r => `<a href="#${r.id}">${esc(r.short)}</a>`).join('');
+$('#ovrows').innerHTML = D.repos.map(r => `<tr>
+  <td><a href="#${r.id}"><b>${esc(r.name)}</b></a><div class="mono" style="font-size:12px;color:var(--muted)">${esc(r.owner)}</div></td>
+  <td><span class="kind ${kindClass[r.kind]||''}">${esc(r.kind)}</span></td>
+  <td class="num">${esc(r.stars)}</td>
+  <td>${esc(r.what)}</td><td>${esc(r.use)}</td><td>${esc(r.fit)}</td></tr>`).join('');
+$('#picklist').innerHTML = D.pick.map(p => `<div><span class="q">${esc(p[0])}</span><span class="a">${p[1]}</span></div>`).join('');
+
+function slate(r){
+  return `<div class="panel"><div class="slate"><div><div class="eyebrow">${esc(r.kind)} · ${esc(r.owner)}</div>
+    <h2><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.name)} ↗</a></h2></div>
+    <div class="meta"><span>⭐ ${esc(r.stars)}</span><span>${esc(r.license)}</span><span>更新 ${esc(r.updated)}</span></div></div>`;
+}
+function verdict(r){
+  const li = a => `<ul>${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  return `<div class="verdict">
+    <div><h3>是什么</h3><p>${r.about}</p></div>
+    <div><h3>亮点</h3>${li(r.pros)}</div>
+    <div><h3>注意</h3>${li(r.cons)}</div>
+    ${r.howto ? `<div style="grid-column:1/-1"><h3>上手</h3><div class="howto">${esc(r.howto)}</div></div>` : ''}
+  </div></div>`;
+}
+function chips(target, cats, all, onPick){
+  const box = h('div', {class:'chips', role:'group', 'aria-label':'按类别筛选'});
+  const mk = (label, n, val) => { const b=h('button',{type:'button','aria-pressed': val===null?'true':'false'}, `${esc(label)}<span class="n">${n}</span>`); b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); onPick(val);}; box.append(b); };
+  mk('全部', all, null); cats.forEach(c => mk(c[0], c[1], c[0]));
+  target.append(box);
+}
+
+const reels = $('#reels');
+const R = Object.fromEntries(D.repos.map(r => [r.id, r]));
+
+// 1. lemo-opuscar
+(() => {
+  const r = R.lemo, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `
+    <div class="feature"><img src="https://lemomo-ai.github.io/lemo-opuscar/img/feature_opuscar98.jpg" alt="OPUSCAR 98 海报" loading="lazy">
+      <div class="txt"><div class="eyebrow">代表作 · 6 分 31 秒</div><h3 style="font-size:26px">OPUSCAR 98</h3>
+      <p class="desc" style="color:var(--muted)">一只 Clawd 走过 98 部奥斯卡最佳影片，每部换成贴合那部电影的画风：77 部 2D、4 部 2.5D、17 部 3D。最适合用来一次看清这个库的风格上限。</p>
+      <div class="links" style="display:flex;gap:14px;flex-wrap:wrap">${ext('https://lemomo-ai.github.io/lemo-opuscar/opuscar98/','▶ 看成片')}${ext('https://lemomo-ai.github.io/lemo-opuscar/opuscar98/#styles','98 种风格提示词')}${ext('https://lemomo-ai.github.io/lemo-opuscar/','在线画廊（带声音）')}</div></div></div>
+    <div class="chips-slot"></div><div class="grid" id="lemogrid"></div>`;
+  reels.append(s);
+  const grid = $('#lemogrid', s);
+  const draw = cat => { grid.innerHTML = D.lemo.filter(x => !cat || x.cat===cat).map(x => `
+    <article class="card"><div class="media lemo-play" data-film="https://lemomo-ai.github.io/lemo-opuscar/films/${x.slug}.mp4" role="button" tabindex="0" aria-label="播放 ${esc(x.cn)} 样片"><img src="https://lemomo-ai.github.io/lemo-opuscar/img/${x.slug}_0.jpg" alt="${esc(x.cn)} 风格画面" loading="lazy"><span class="tc">${x.dur}s</span><span class="play-hint">点击播放</span></div>
+    <div class="body"><div class="name">${esc(x.cn)}</div><div class="en">${esc(x.en)} · 《${esc(x.film)}》</div>
+    <p class="desc">${esc(x.line)}</p>
+    <div class="tags"><span>${esc(x.cat)}</span>${x.uses.map(u=>`<span>${esc(u)}</span>`).join('')}</div>
+    <div class="links">${ext('https://lemomo-ai.github.io/lemo-opuscar/films/'+x.slug+'.mp4','▶ 看样片')}${ext('https://github.com/lemomo-ai/lemo-opuscar/blob/main/styles/'+x.slug+'/STYLE.md','风格说明')}</div></div></article>`).join(''); };
+  chips($('.chips-slot', s), D.lemoCats, D.lemo.length, draw); draw(null);
+})();
+
+// 2. mg-styles-15
+(() => {
+  const r = R.mg, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `<div class="grid" id="mggrid"></div>`;
+  reels.append(s);
+  $('#mggrid', s).innerHTML = D.mg.map((x,i) => `
+    <article class="card ${x.vertical?'vert':''}"><div class="media">
+      <img src="https://vincentwei1021.github.io/mg-styles-15/docs/readme/films/${x.id}.webp" alt="${esc(x.cn)} 样片预览" loading="lazy">
+      <span class="tl">AI 评审 ${x.score}</span><span class="tc">${x.vertical?'9:16 · ':''}10s</span></div>
+    <div class="body"><div class="name">${String(i+1).padStart(2,'0')} · ${esc(x.cn)}</div><div class="en">${esc(x.en)} · ${esc(x.film)}</div>
+    <p class="desc">${esc(x.sig)}</p>
+    <div class="tags">${x.vis.map(v=>`<span>${esc(v)}</span>`).join('')}</div>
+    <div class="en" style="margin-top:2px">技术路线：${esc(x.route)}</div>
+    <div class="links">${ext('https://vincentwei1021.github.io/mg-styles-15/#'+x.id,'▶ 带声音看')}${ext('https://github.com/Vincentwei1021/mg-styles-15/blob/main/prompts/'+x.id+'.md','提示词')}${ext('https://github.com/Vincentwei1021/mg-styles-15/tree/main/demos/'+x.id,'源码')}</div></div></article>`).join('');
+})();
+
+// 3. ClaudeAnimationBase
+(() => {
+  const r = R.cab, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `<div class="duo">
+    <div><img src="https://raw.githubusercontent.com/JohnHeibel/ClaudeAnimationBase/main/docs/emotions.jpg" alt="Clawd 的表情设定表" loading="lazy" style="width:100%;display:block"><div class="pad"><h3>表情设定表</h3><p class="desc" style="color:var(--muted)">31 种演出来的情绪，每种都是现成的函数，可以直接在镜头里调用。</p></div></div>
+    <div><img src="https://raw.githubusercontent.com/JohnHeibel/ClaudeAnimationBase/main/docs/views.jpg" alt="Clawd 的视角、动作和帽子设定表" loading="lazy" style="width:100%;display:block"><div class="pad"><h3>视角、动作和服装</h3><p class="desc" style="color:var(--muted)">正侧背视角、走跑跳舞、帽子和表情符号。可以让 Opus 换角色、加新情绪或新服装。</p></div></div>
+  </div>`;
+  reels.append(s);
+})();
+
+// 4. P(doom) two repos
+(() => {
+  const r = R.pdoom, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `<div class="duo">
+    <div id="pd-john"><div class="pair">${D.pdJohn.map(m => `<img src="${m}" alt="P(doom) 动画片段" loading="lazy">`).join('')}</div>
+      <div class="pad"><div class="eyebrow">JohnHeibel/PDoomVideo · ⭐ ${esc(R.pdoom.starsJohn)}</div><h3>手绘水彩版</h3>
+      <p class="desc" style="color:var(--muted)">p5.js + p5.brush 画水彩笔触，主角是 Clawd。9 个章节各一个文件，Opus 先写动画指南和分镜，再派并行子代理分头画。只给了两条方向：用 Clawd 形象，每句歌词配有意思的画面和转场。</p>
+      <div class="links" style="display:flex;gap:14px;flex-wrap:wrap">${ext('https://youtu.be/8j-hR4fJywU','▶ YouTube 成片')}${ext('https://github.com/JohnHeibel/PDoomVideo/blob/main/ANIMATION_GUIDE.md','ANIMATION_GUIDE.md')}${ext('https://github.com/JohnHeibel/PDoomVideo/blob/main/STORYBOARD.md','STORYBOARD.md')}</div></div></div>
+    <div><div class="strip">${D.mx.map(m => `<img src="${m}" alt="mexicat P(doom) 画面" loading="lazy">`).join('')}</div>
+      <div class="pad"><div class="eyebrow">mexicat/pdoom-video · ⭐ ${esc(R.pdoom.starsMex)}</div><h3>three.js 电影感版</h3>
+      <p class="desc" style="color:var(--muted)">TypeScript + three.js，逐字同步的卡拉 OK 字幕，后期有辉光、光晕和胶片颗粒，还有按画面区域自适应采样的运动模糊，可以导出真 4K60。歌词时间轴用 Demucs 分轨加强制对齐做到逐词。工程量明显更大，适合想学「专业级渲染管线」的人。</p>
+      <div class="links" style="display:flex;gap:14px;flex-wrap:wrap">${ext('https://www.youtube.com/watch?v=5EoO5413dBY','▶ YouTube 4K')}${ext('https://github.com/mexicat/pdoom-video/blob/main/docs/TREATMENT.md','TREATMENT.md')}${ext('https://github.com/mexicat/pdoom-video/blob/main/docs/ENGINE.md','ENGINE.md')}</div></div></div>
+  </div>`;
+  reels.append(s);
+})();
+
+// 5. yihui-dev
+(() => {
+  const r = R.yihui, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `<div class="chips-slot"></div><div class="grid sm" id="skgrid"></div>`;
+  reels.append(s);
+  const grid = $('#skgrid', s);
+  const draw = cat => { grid.innerHTML = D.sk.filter(x => !cat || x.cat===cat).map(x => `
+    <article class="card"><div class="media"><img src="https://media.skillry.dev/opus-5-5/${x.slug}/preview.webp" alt="@${esc(x.author)} 的作品预览" loading="lazy"></div>
+    <div class="body"><div class="name" style="font-size:14px">@${esc(x.author)}</div>
+    <div class="tags"><span>${esc(x.cat)}</span>${x.tags.map(t=>`<span>${esc(t)}</span>`).join('')}</div>
+    <div class="links">${ext(x.post,'X 原帖')}${ext('https://github.com/yihui-dev/awesome-opus5-5-videos/blob/main/prompts/'+x.slug+'.md','提示词')}${x.remake?ext('https://skillry.dev/ai-videos/opus-5-5/'+x.slug,'原版 vs 复刻'):''}</div></div></article>`).join(''); };
+  chips($('.chips-slot', s), D.skCats, D.sk.length, draw); draw(null);
+})();
+
+// 6. joeseesun
+(() => {
+  const r = R.joe, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `
+    <h3 class="sec">18 份完整提示词</h3>
+    <div class="tbl"><table style="min-width:640px"><thead><tr><th>#</th><th>提示词</th><th>作者</th><th>类型</th></tr></thead><tbody>
+    ${D.joe.map(x => `<tr><td class="num">${x.n}</td><td>${ext('https://github.com/joeseesun/opus-video-prompts/blob/main/prompts/'+x.file, esc(x.title))}</td><td>${esc(x.author)}</td><td>${esc(x.type)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <h3 class="sec">9 种技术路线</h3>
+    <div class="tbl"><table style="min-width:640px"><thead><tr><th>路线</th><th>工具</th><th>代表案例</th></tr></thead><tbody>
+    ${D.routes.map(x => `<tr><td><b>${esc(x[0])}</b></td><td>${esc(x[1])}</td><td>${esc(x[2])}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  reels.append(s);
+})();
+
+// 7. athemeroy
+(() => {
+  const r = R.ath, s = h('section', {class:'reel', id:r.id});
+  s.innerHTML = slate(r) + verdict(r) + `
+    <div class="grid sm" style="margin-bottom:22px">${D.ath.map(x => `<article class="card"><div class="media"><img src="${x.img}" alt="${esc(x.title)}" loading="lazy"></div>
+      <div class="body"><div class="eyebrow">${esc(x.model)}</div><div class="name" style="font-size:14.5px">${esc(x.title)}</div><p class="desc">${esc(x.note)}</p><div class="links">${ext(x.url,'X 原帖')}</div></div></article>`).join('')}</div>
+    <h3 class="sec">它整理出的其它可复用 skill / 项目</h3>
+    <div class="tbl"><table style="min-width:640px"><thead><tr><th>项目</th><th>⭐</th><th>做什么</th></tr></thead><tbody>
+    ${D.athProjects.map(x => `<tr><td>${ext('https://github.com/'+x[0], esc(x[0]))}</td><td class="num">${esc(x[1])}</td><td>${esc(x[2])}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  reels.append(s);
+})();
+
+// wrap each band in .inner and scatter Daisy Days decorations
+const decos = [
+  ['daisy.svg','top:-44px;right:-40px;width:190px','spin'], ['star1.svg','bottom:40px;left:2%;width:64px','bob hide-sm'],
+  ['cloud.svg','top:26px;left:2%;width:120px','hide-sm'], ['daisy.svg','bottom:-50px;right:-36px;width:170px',''],
+  ['star2.svg','top:30px;right:4%;width:60px','bob hide-sm'], ['daisy.svg','bottom:-56px;left:-44px;width:180px','spin'],
+  ['sun.svg','top:20px;right:3%;width:110px','hide-sm'], ['star0.svg','bottom:60px;right:3%;width:54px','bob hide-sm'],
+];
+document.querySelectorAll('.reel').forEach((s, i) => {
+  const inner = h('div', {class:'inner'}); while (s.firstChild) inner.append(s.firstChild); s.append(inner);
+  [decos[(i*2) % decos.length], decos[(i*2+1) % decos.length]].forEach(([f, st, cls]) => s.insertAdjacentHTML('afterbegin', `<img class="deco ${cls}" src="deco/${f}" alt="" style="${st}">`));
+});
+
+// lemo cards: swap the still for the hosted film on click or Enter
+document.addEventListener('click', e => { const m = e.target.closest('.lemo-play'); if (m) playFilm(m); });
+document.addEventListener('keydown', e => { const m = e.target.closest && e.target.closest('.lemo-play'); if (m && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); playFilm(m); } });
+function playFilm(m){
+  if (m.querySelector('video')) return;
+  const v = h('video', {src: m.dataset.film, controls: '', playsinline: '', preload: 'auto'});
+  m.querySelector('img').replaceWith(v); m.querySelector('.play-hint')?.remove(); m.removeAttribute('role');
+  v.play().catch(()=>{});
+}
+
+// mg videos: play while visible (unless reduced motion), click toggles
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+document.querySelectorAll('#mggrid video, #pd-john video').forEach(v => {
+  const hint = v.parentElement.querySelector('.play-hint');
+  v.addEventListener('play', () => hint && (hint.hidden = true));
+  v.addEventListener('pause', () => hint && (hint.hidden = false));
+  v.parentElement.addEventListener('click', () => v.paused ? v.play().catch(()=>{}) : v.pause());
+  if (reduce) { v.removeAttribute('autoplay'); v.pause(); }
+});
+if (!reduce && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver(es => es.forEach(e => { const v=e.target; if (e.isIntersecting) v.play().catch(()=>{}); else v.pause(); }), {threshold:.35});
+  document.querySelectorAll('#mggrid video').forEach(v => io.observe(v));
+}
+</script>
+
+</body>
+</html>
