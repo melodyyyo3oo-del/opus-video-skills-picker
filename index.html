@@ -45,14 +45,15 @@ p{margin:0}
 @keyframes bob{50%{transform:translateY(-8px) rotate(6deg)}}
 
 /* masthead */
-header.top{position:relative;overflow:hidden;padding-block:64px 56px;text-align:center}
-header.top .inner{display:grid;gap:18px;justify-items:center}
+header.top{position:relative;overflow:hidden;padding-block:84px 76px;text-align:center}
+header.top .inner{display:grid;gap:22px;justify-items:center}
 header.top h1{font-size:clamp(34px,6vw,64px);line-height:1.25}
 header.top h1 .hl{background:var(--butter);border:var(--bw) solid var(--ink);border-radius:18px;padding:0 .25em;box-shadow:var(--shadow-sm);display:inline-block;transform:rotate(-2deg)}
-header.top .lede{max-width:40ch;color:var(--muted);font-size:17px;font-weight:600}
+header.top .lede{max-width:none;color:var(--muted);font-size:clamp(15px,1.8vw,18px);font-weight:600;text-wrap:balance}
 .badge{display:inline-block;padding:6px 18px;border-radius:50px;border:var(--bw) solid var(--ink);font-family:var(--display);font-size:14px;background:var(--mint)}
-.facts{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:26px}
-.facts div{display:grid;gap:2px;background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:12px 20px;min-width:150px}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;max-width:960px;margin:0 auto 34px;text-align:center}
+@media (max-width:720px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.facts div{display:grid;gap:2px;background:var(--white);border:var(--bw) solid var(--ink);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:14px 12px;justify-items:center}
 .facts div:nth-child(1){background:var(--soft-pink)}.facts div:nth-child(2){background:var(--sky)}.facts div:nth-child(3){background:var(--butter)}.facts div:nth-child(4){background:var(--lavender)}
 .facts b{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.1;font-variant-numeric:tabular-nums}
 .facts span{font-size:13px;font-weight:700}
@@ -70,7 +71,9 @@ nav.reels a:hover{transform:translateY(-2px);box-shadow:3px 3px 0 var(--ink)}
 .band{position:relative;overflow:hidden;padding-block:56px 64px;border-bottom:var(--bw) solid var(--ink)}
 #overview{background:var(--cream)}
 #pick{background:var(--butter)}
-section > .inner > h2, .band-title{font-size:clamp(26px,3.6vw,40px);margin-bottom:8px}
+section > .inner > h2, .band-title{font-size:clamp(28px,3.8vw,42px);margin-bottom:10px}
+.band > .inner > h2{text-align:center}
+.band > .inner > .sub{text-align:center;margin-inline:auto;max-width:60ch;text-wrap:pretty;margin-bottom:28px}
 .band-title.on-color{color:var(--white);text-shadow:3px 3px 0 var(--ink);-webkit-text-stroke:1px var(--ink)}
 .sub{color:var(--ink);opacity:.8;max-width:72ch;margin-bottom:22px;font-weight:600}
 
@@ -185,7 +188,7 @@ footer .inner{max-width:760px;text-align:center}
   <img class="deco hide-sm" src="deco/cloud.svg" alt="" style="top:18px;right:3%;width:120px">
   <div class="inner">
     <h2>总览</h2>
-    <p class="sub">8 个仓库里，真正能安装成 Claude Code skill 的只有 lemo-opuscar。其余几个是可以直接喂给 Claude 的风格提示词、起步代码，或者案例合集。所有片子都是 Opus 5.5 写代码逐帧渲染的，没有用视频生成模型。数据取自 GitHub，2026-10-25。</p>
+    <p class="sub">8 个仓库里，只有 lemo-opuscar 能直接装成 Claude Code skill，其余是风格提示词、起步代码和案例合集。</p>
     <div class="facts" id="facts"></div>
     <div class="tbl"><table>
       <thead><tr><th>仓库</th><th>类型</th><th>⭐</th><th>里面有什么</th><th>怎么用</th><th>适合</th></tr></thead>
@@ -210,7 +213,7 @@ footer .inner{max-width:760px;text-align:center}
   <img class="deco hide-sm" src="deco/rainbow.svg" alt="" style="bottom:12px;left:4%;width:140px">
   <img class="deco" src="deco/daisy.svg" alt="" style="top:-40px;right:-40px;width:150px">
   <div class="inner">
-  star 数和最近更新时间取自 GitHub API（2026-10-25）。效果图和样片版权归各仓库作者，这里只做挑选参考，点卡片上的链接可以到原仓库看完整内容。所有效果图和样片都直接从原仓库或原网站加载，本仓库不存放任何一张。来源和许可见 <a href="https://github.com/melodyyyo3oo-del/opus-video-skills-picker/blob/main/CREDITS.md">CREDITS.md</a>。
+  页面上的片子都是 Opus 5.5 写代码逐帧渲染的，没有用视频生成模型。star 数和最近更新时间取自 GitHub API（2026-10-25）。效果图和样片版权归各仓库作者，这里只做挑选参考，点卡片上的链接可以到原仓库看完整内容。所有效果图和样片都直接从原仓库或原网站加载，本仓库不存放任何一张。来源和许可见 <a href="https://github.com/melodyyyo3oo-del/opus-video-skills-picker/blob/main/CREDITS.md">CREDITS.md</a>。
   </div>
 </footer>
 
